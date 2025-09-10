@@ -1,0 +1,15 @@
+services:
+  metatek.gui.aeon:
+    container_name: metatek.gui.aeon
+    image: harbor.lab.riviu.com.vn/eggstech/metatek.gui.aeon
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.metatek-gui-aeon.rule=Host(`aeon.metatek.okayla.vn`)"
+      - "traefik.http.routers.metatek-gui-aeon.entrypoints=websecure"
+      - "traefik.http.routers.metatek-gui-aeon.tls.certresolver=myresolver"
+
+networks:
+  default:
+    name: app
+    external: true

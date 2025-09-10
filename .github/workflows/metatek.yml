@@ -1,0 +1,47 @@
+name: Deploy Metatek
+
+on:
+  pull_request:
+    types: ["closed"]
+    branches: ["metatek"]
+
+jobs:
+  build:
+    runs-on: lab
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login Harbor
+        run: echo Harbor12345 | docker login harbor.lab.riviu.com.vn -u admin --password-stdin
+      - name: Create env file
+        run: |
+          cat <<EOF >> .env
+          ${{ secrets.ENV_METATEK }}
+          EOF
+      - name: Build
+        run: docker build -t harbor.lab.riviu.com.vn/eggstech/metatek.gui.aeon .
+      - name: Push
+        run: docker push harbor.lab.riviu.com.vn/eggstech/metatek.gui.aeon
+      - name: Clean Up
+        run: |
+          docker container prune -f || true
+          docker image prune -f || true
+          docker system prune -f || true
+
+  run:
+    needs: build
+    runs-on: eggstech-dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login Harbor
+        run: echo Harbor12345 | docker login harbor.lab.riviu.com.vn -u admin --password-stdin
+      - name: Pull
+        run: docker compose -f docker-composes/docker-compose.metatek.yml pull
+      - name: Run
+        run: docker compose -f docker-composes/docker-compose.metatek.yml up -d --force-recreate
+      - name: Clean Up
+        run: |
+          docker container prune -f || true
+          docker image prune -f || true
+          docker system prune -f || true

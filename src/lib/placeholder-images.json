@@ -29,6 +29,24 @@
       "description": "Image submission for review.",
       "imageUrl": "https://picsum.photos/seed/101/600/400",
       "imageHint": "retail display"
+    },
+    {
+      "id": "review-image-2",
+      "description": "Image submission for review.",
+      "imageUrl": "https://picsum.photos/seed/102/600/400",
+      "imageHint": "store aisle"
+    },
+    {
+      "id": "review-image-3",
+      "description": "Image submission for review.",
+      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageHint": "warehouse boxes"
+    },
+    {
+      "id": "review-image-4",
+      "description": "Image submission for review.",
+      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageHint": "clean floor"
     }
   ]
 }

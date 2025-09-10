@@ -87,10 +87,13 @@ export const initialTasks: Task[] = [
             max: 2,
         },
         {
-            type: 'image',
-            label: 'Photo of the checkout counter display',
-            min: 1,
-            max: 1,
+            type: 'checklist',
+            label: 'Setup Checklist',
+            checklistItems: [
+              { id: 1, text: 'Main banner is visible from entrance.'},
+              { id: 2, text: 'Wobblers are attached to featured products.'},
+              { id: 3, text: 'Brochures are available at the counter.'},
+            ]
         }
     ]
   },
@@ -124,6 +127,58 @@ export const initialTasks: Task[] = [
             ]
         }
     ]
+  },
+   {
+    id: 'TSK-006',
+    name: 'Stock Count Verification',
+    store: 'All Stores',
+    dueDate: '2024-08-15',
+    status: 'Active',
+    type: 'Mixed',
+    description: 'Verify the stock count from the latest delivery and check for discrepancies.',
+    requirements: [
+        {
+            type: 'image',
+            label: 'Photo of Delivery Note',
+            min: 1,
+            max: 1,
+        },
+        {
+            type: 'checklist',
+            label: 'Verification Checklist',
+            checklistItems: [
+                { text: 'Count matches system records.' },
+                { text: 'Discrepancy report filed.' },
+            ]
+        }
+    ],
+    isRecurring: false,
+  },
+  {
+    id: 'TSK-007',
+    name: 'Cleanliness Audit Photo',
+    store: 'All Stores',
+    dueDate: '2024-08-10',
+    status: 'Active',
+    type: 'Image',
+    description: 'Submit a photo of the main customer area to verify cleanliness standards are being met.',
+    requirements: [
+        {
+            type: 'image',
+            label: 'Photo of main customer area',
+            min: 1,
+            max: 1
+        },
+         {
+            type: 'checklist',
+            label: 'Cleanliness Checklist',
+            checklistItems: [
+                { text: 'Floor is clean.' },
+                { text: 'Shelves are dust-free.' },
+            ]
+        }
+    ],
+    isRecurring: true,
   },
 ];
 

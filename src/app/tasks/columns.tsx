@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Task } from '@/lib/tasks';
+import Link from 'next/link';
 
 const StatusBadge = ({ status }: { status: string }) => {
     switch (status) {
@@ -27,15 +29,6 @@ const StatusBadge = ({ status }: { status: string }) => {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
-
-export type Task = {
-  id: string;
-  name: string;
-  store: string;
-  dueDate: string;
-  status: 'Active' | 'Completed' | 'Draft';
-  type: string;
-};
 
 export const columns: ColumnDef<Task>[] = [
     {
@@ -70,6 +63,13 @@ export const columns: ColumnDef<Task>[] = [
           </Button>
         )
       },
+      cell: ({ row }) => {
+        return (
+            <Link href={`/tasks/${row.original.id}`} className="font-medium text-primary hover:underline">
+                {row.original.name}
+            </Link>
+        )
+      }
   },
   {
     accessorKey: 'store',

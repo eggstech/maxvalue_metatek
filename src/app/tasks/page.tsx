@@ -19,67 +19,18 @@ import {
 import { PlusCircle } from 'lucide-react';
 import { CreateTaskForm } from '@/components/create-task-form';
 import * as React from 'react';
-import { columns, Task } from './columns';
+import { columns } from './columns';
 import { DataTable } from '@/components/data-table';
-
-const initialTasks: Task[] = [
-  {
-    id: 'TSK-001',
-    name: 'Weekly Display Check',
-    store: 'All Stores',
-    dueDate: '2024-07-25',
-    status: 'Active',
-    type: 'Checklist',
-  },
-  {
-    id: 'TSK-002',
-    name: 'End-of-Month Stock Count',
-    store: 'All Stores',
-    dueDate: '2024-07-31',
-    status: 'Active',
-    type: 'Data Entry',
-  },
-  {
-    id: 'TSK-003',
-    name: 'New Campaign POSM Setup',
-    store: 'Stores Group A',
-    dueDate: '2024-07-20',
-    status: 'Completed',
-    type: 'Image',
-  },
-  {
-    id: 'TSK-004',
-    name: 'Customer Feedback Survey',
-    store: 'Store C, Store D',
-    dueDate: '2024-08-05',
-    status: 'Draft',
-    type: 'Data Entry',
-  },
-  {
-    id: 'TSK-005',
-    name: 'Quarterly Deep Clean Audit',
-    store: 'All Stores',
-    dueDate: '2024-09-30',
-    status: 'Active',
-    type: 'Checklist',
-  },
-];
-
+import { Task, initialTasks, addTask as addTaskToState } from '@/lib/tasks';
 
 export default function TasksPage() {
-  const [tasks, setTasks] = React.useState(initialTasks);
+  const [tasks, setTasks] = React.useState<Task[]>(initialTasks);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
-  const addTask = (newTaskData: any) => {
-    const newTask: Task = {
-        id: `TSK-${String(tasks.length + 1).padStart(3, '0')}`,
-        name: newTaskData.taskName,
-        store: newTaskData.assignedTo,
-        dueDate: newTaskData.dueDate.toLocaleDateString('en-CA'),
-        status: 'Draft',
-        type: newTaskData.taskType,
-    };
+  const handleAddTask = (newTaskData: any) => {
+    const newTask = addTaskToState(newTaskData, tasks);
     setTasks(prevTasks => [...prevTasks, newTask]);
+    setIsDialogOpen(false);
   };
 
 
@@ -107,7 +58,7 @@ export default function TasksPage() {
                   Fill out the details below to create a new task.
                 </DialogDescription>
               </DialogHeader>
-              <CreateTaskForm onTaskCreate={addTask} onAfterSubmit={() => setIsDialogOpen(false)} />
+              <CreateTaskForm onTaskCreate={handleAddTask} onAfterSubmit={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
         </div>

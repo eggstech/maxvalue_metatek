@@ -30,6 +30,7 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import * as React from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -47,6 +48,7 @@ const formSchema = z.object({
 });
 
 export function CreateTaskForm() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,7 +59,10 @@ export function CreateTaskForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // TODO: Implement task creation logic
     console.log(values);
-    // For now, we just log the values. We can add a toast notification later.
+    toast({
+      title: 'Task Created',
+      description: `The task "${values.taskName}" has been successfully created.`,
+    });
   }
 
   return (

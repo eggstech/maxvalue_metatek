@@ -34,6 +34,7 @@ import * as React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
+import { Switch } from './ui/switch';
 
 const requirementSchema = z.object({
   type: z.enum(['image', 'data-entry', 'checklist']),
@@ -57,6 +58,7 @@ const formSchema = z.object({
   assignedTo: z.string({
     required_error: 'Please select a store or group to assign the task to.',
   }),
+  isRecurring: z.boolean().default(false).optional(),
   requirements: z.array(requirementSchema).optional(),
 });
 
@@ -75,6 +77,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
       taskName: '',
       description: '',
       dueTime: '23:59',
+      isRecurring: false,
       requirements: [],
     },
   });
@@ -226,6 +229,28 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="isRecurring"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel>Lặp lại Hằng ngày</FormLabel>
+                <FormDescription>
+                  Nếu được bật, tác vụ này sẽ tự động được tạo lại mỗi ngày.
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+
         <Separator />
         
         <div className="space-y-4">
@@ -332,5 +357,3 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
     </Form>
   );
 }
-
-    

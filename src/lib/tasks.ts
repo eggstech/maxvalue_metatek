@@ -17,6 +17,7 @@ export type Task = {
   type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed';
   description?: string;
   requirements?: Requirement[];
+  isRecurring?: boolean;
 };
 
 export const initialTasks: Task[] = [
@@ -44,7 +45,8 @@ export const initialTasks: Task[] = [
             min: 1,
             max: 1,
         }
-    ]
+    ],
+    isRecurring: true,
   },
   {
     id: 'TSK-002',
@@ -152,6 +154,7 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
         type: primaryType,
         description: newTaskData.description,
         requirements: newTaskData.requirements,
+        isRecurring: newTaskData.isRecurring,
     };
     return newTask;
 };

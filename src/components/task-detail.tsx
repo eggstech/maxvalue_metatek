@@ -4,7 +4,7 @@ import { Task } from "@/lib/tasks";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, CheckSquare, Tag, Store, Info, Image as ImageIcon, TextCursorInput, ListChecks } from "lucide-react";
+import { Calendar, CheckSquare, Tag, Store, Info, Image as ImageIcon, TextCursorInput, ListChecks, Repeat } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -106,6 +106,7 @@ export function TaskDetail({ task }: { task: Task }) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Submission ID</TableHead>
+
                                         <TableHead>Store</TableHead>
                                         <TableHead>Submitted By</TableHead>
                                         <TableHead>Date</TableHead>
@@ -171,6 +172,18 @@ export function TaskDetail({ task }: { task: Task }) {
                                 <p className="font-medium">{task.type}</p>
                             </div>
                         </div>
+                        {task.isRecurring && (
+                            <>
+                                <Separator />
+                                <div className="flex items-center gap-3">
+                                    <Repeat className="h-5 w-5 text-muted-foreground" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Recurring</p>
+                                        <p className="font-medium">Repeats Daily</p>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                         <Separator />
                         <div className="flex items-center gap-3">
                             <CheckSquare className="h-5 w-5 text-muted-foreground" />

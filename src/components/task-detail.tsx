@@ -16,6 +16,9 @@ import {
 import { initialSubmissions } from "@/lib/submissions";
 import Link from "next/link";
 import ReactMarkdown from 'react-markdown';
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
 
 const StatusBadge = ({ status }: { status: string }) => {
     switch (status) {
@@ -76,10 +79,13 @@ export function TaskDetail({ task }: { task: Task }) {
                                             <div className="flex-1">
                                                 <CardTitle className="text-base">{req.label}</CardTitle>
                                                 {req.type === 'image' && <CardDescription>Requires {req.min}-{req.max} image(s).</CardDescription>}
+                                                {req.type === 'data-entry' && req.entryType === 'text' && <CardDescription>Text input</CardDescription>}
+                                                {req.type === 'data-entry' && req.entryType === 'single' && <CardDescription>Single choice</CardDescription>}
+                                                {req.type === 'data-entry' && req.entryType === 'multiple' && <CardDescription>Multiple choice</CardDescription>}
                                             </div>
                                         </CardHeader>
-                                        {req.type === 'checklist' && req.checklistItems && (
-                                            <CardContent className="p-4 pt-0 pl-12">
+                                        <CardContent className="p-4 pt-0 pl-12">
+                                            {req.type === 'checklist' && req.checklistItems && (
                                                 <ul className="space-y-2">
                                                     {req.checklistItems.map((item, itemIndex) => (
                                                         <li key={itemIndex} className="flex items-center gap-2 text-sm">
@@ -88,8 +94,28 @@ export function TaskDetail({ task }: { task: Task }) {
                                                         </li>
                                                     ))}
                                                 </ul>
-                                            </CardContent>
-                                        )}
+                                            )}
+                                            {req.type === 'data-entry' && req.entryType === 'single' && req.options && (
+                                                <RadioGroup>
+                                                    {req.options.map((option, optionIndex) => (
+                                                        <div key={optionIndex} className="flex items-center space-x-2">
+                                                            <RadioGroupItem value={option.text} id={`${req.label}-option-${optionIndex}`} />
+                                                            <Label htmlFor={`${req.label}-option-${optionIndex}`}>{option.text}</Label>
+                                                        </div>
+                                                    ))}
+                                                </RadioGroup>
+                                            )}
+                                            {req.type === 'data-entry' && req.entryType === 'multiple' && req.options && (
+                                                 <div className="space-y-2">
+                                                    {req.options.map((option, optionIndex) => (
+                                                        <div key={optionIndex} className="flex items-center space-x-2">
+                                                            <Checkbox id={`${req.label}-option-${optionIndex}`} />
+                                                            <Label htmlFor={`${req.label}-option-${optionIndex}`}>{option.text}</Label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </CardContent>
                                     </Card>
                                 ))}
                                 {(!task.requirements || task.requirements.length === 0) && (

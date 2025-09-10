@@ -35,6 +35,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
 import { Switch } from './ui/switch';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 
 const requirementSchema = z.object({
   type: z.enum(['image', 'data-entry', 'checklist']),
@@ -42,6 +43,8 @@ const requirementSchema = z.object({
   min: z.number().optional(),
   max: z.number().optional(),
   checklistItems: z.array(z.object({ text: z.string().min(1, 'Checklist item cannot be empty.') })).optional(),
+  entryType: z.enum(['text', 'single', 'multiple']).optional(),
+  options: z.array(z.object({ text: z.string().min(1, 'Option cannot be empty.') })).optional(),
 });
 
 const formSchema = z.object({
@@ -105,6 +108,26 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
       checklistItems: currentItems,
     });
   }
+
+  const addDataEntryOption = (reqIndex: number) => {
+    const requirements = form.getValues('requirements');
+    const currentOptions = requirements?.[reqIndex]?.options || [];
+    update(reqIndex, {
+        ...requirements?.[reqIndex],
+        options: [...currentOptions, { text: '' }],
+    });
+  };
+
+  const removeDataEntryOption = (reqIndex: number, optionIndex: number) => {
+      const requirements = form.getValues('requirements');
+      const currentOptions = requirements?.[reqIndex]?.options || [];
+      currentOptions.splice(optionIndex, 1);
+      update(reqIndex, {
+          ...requirements?.[reqIndex],
+          options: currentOptions,
+      });
+  }
+
 
   function onSubmit(values: FormValues) {
     onTaskCreate(values);
@@ -265,10 +288,15 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                     <FormField
                         control={form.control}
                         name={`requirements.${index}.type`}
-                        render={({ field }) => (
+                        render={({ field: typeField }) => (
                             <FormItem>
                                 <FormLabel>Requirement Type</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select onValueChange={(value) => {
+                                    typeField.onChange(value);
+                                    if(value === 'data-entry') {
+                                        form.setValue(`requirements.${index}.entryType`, 'text');
+                                    }
+                                }} defaultValue={typeField.value}>
                                     <FormControl><SelectTrigger><SelectValue placeholder="Select requirement type..." /></SelectTrigger></FormControl>
                                     <SelectContent>
                                         <SelectItem value="image">Image Submission</SelectItem>
@@ -292,7 +320,58 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                     )}
 
                     {form.watch(`requirements.${index}.type`) === 'data-entry' && (
-                        <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Field Name</FormLabel><FormControl><Input placeholder="e.g. 'Current stock count'" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                        <div className="space-y-4">
+                            <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Field Name</FormLabel><FormControl><Input placeholder="e.g. 'Current stock count'" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField
+                                control={form.control}
+                                name={`requirements.${index}.entryType`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Input Type</FormLabel>
+                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select input type..." />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="text">Text Input</SelectItem>
+                                                <SelectItem value="single">Single Choice</SelectItem>
+                                                <SelectItem value="multiple">Multiple Choice</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {(form.watch(`requirements.${index}.entryType`) === 'single' || form.watch(`requirements.${index}.entryType`) === 'multiple') && (
+                                <div className='space-y-2'>
+                                    <FormLabel>Options</FormLabel>
+                                    {form.getValues(`requirements.${index}.options`)?.map((option, optionIndex) => (
+                                        <div key={optionIndex} className="flex items-center gap-2">
+                                            <FormField
+                                                control={form.control}
+                                                name={`requirements.${index}.options.${optionIndex}.text`}
+                                                render={({ field }) => (
+                                                    <FormItem className='flex-grow'>
+                                                        <FormControl>
+                                                            <Input placeholder={`Option ${optionIndex + 1}`} {...field} />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <Button type="button" variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => removeDataEntryOption(index, optionIndex)}>
+                                                <Trash2 className="h-4 w-4 text-muted-foreground"/>
+                                            </Button>
+                                        </div>
+                                    ))}
+                                    <Button type="button" variant="outline" size="sm" onClick={() => addDataEntryOption(index)}>
+                                        <PlusCircle className="mr-2 h-4 w-4" /> Add Option
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
                     )}
 
                     {form.watch(`requirements.${index}.type`) === 'checklist' && (
@@ -338,7 +417,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                          <Button variant="ghost" className="justify-start p-3 h-auto" onClick={() => append({type: 'image', label: '', min: 1, max: 1})}>
                             <ImageIcon className="mr-2 h-4 w-4" /> Image Submission
                          </Button>
-                         <Button variant="ghost" className="justify-start p-3 h-auto" onClick={() => append({type: 'data-entry', label: ''})}>
+                         <Button variant="ghost" className="justify-start p-3 h-auto" onClick={() => append({type: 'data-entry', label: '', entryType: 'text', options: []})}>
                             <TextCursorInput className="mr-2 h-4 w-4" /> Data Entry
                          </Button>
                          <Button variant="ghost" className="justify-start p-3 h-auto" onClick={() => append({type: 'checklist', label: '', checklistItems: [{text: ''}]})}>
@@ -357,5 +436,3 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
     </Form>
   );
 }
-
-    

@@ -6,6 +6,8 @@ export type Requirement = {
     min?: number;
     max?: number;
     checklistItems?: { text: string }[];
+    entryType?: 'text' | 'single' | 'multiple';
+    options?: { text: string }[];
 }
 
 export type Task = {
@@ -59,11 +61,13 @@ export const initialTasks: Task[] = [
     requirements: [
         {
             type: 'data-entry',
-            label: 'SKU-123 Stock'
+            label: 'SKU-123 Stock',
+            entryType: 'text'
         },
         {
             type: 'data-entry',
-            label: 'SKU-456 Stock'
+            label: 'SKU-456 Stock',
+            entryType: 'text'
         }
     ]
   },

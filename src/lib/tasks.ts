@@ -1,12 +1,22 @@
+import { format } from "date-fns";
+
+export type Requirement = {
+    type: 'image' | 'data-entry' | 'checklist';
+    label: string;
+    min?: number;
+    max?: number;
+    checklistItems?: { text: string }[];
+}
+
 export type Task = {
   id: string;
   name: string;
   store: string;
   dueDate: string;
   status: 'Active' | 'Completed' | 'Draft';
-  type: 'Checklist' | 'Data Entry' | 'Image';
+  type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed';
   description?: string;
-  checklist?: { id: number; text: string; completed: boolean }[];
+  requirements?: Requirement[];
 };
 
 export const initialTasks: Task[] = [
@@ -17,11 +27,23 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-25',
     status: 'Active',
     type: 'Checklist',
-    description: 'Ensure all weekly promotional displays are set up correctly and are neat and tidy. The main promotional banner should be visible from the store entrance.',
-    checklist: [
-        { id: 1, text: 'Main banner is visible from entrance.', completed: false },
-        { id: 2, text: 'Promotional materials are not damaged.', completed: false },
-        { id: 3, text: 'All prices are correct and visible.', completed: false },
+    description: 'Ensure all weekly promotional displays are set up correctly and are neat and tidy.\n\n- The main promotional banner should be visible from the store entrance.\n- Promotional materials should not be damaged.\n- All prices must be correct and clearly visible.',
+    requirements: [
+        {
+            type: 'checklist',
+            label: 'Display Audit',
+            checklistItems: [
+                { text: 'Main banner is visible from entrance.' },
+                { text: 'Promotional materials are not damaged.' },
+                { text: 'All prices are correct and visible.' },
+            ]
+        },
+        {
+            type: 'image',
+            label: 'Photo of the main display',
+            min: 1,
+            max: 1,
+        }
     ]
   },
   {
@@ -32,6 +54,16 @@ export const initialTasks: Task[] = [
     status: 'Active',
     type: 'Data Entry',
     description: 'Perform a full stock count of all items in the warehouse and on the shelves. Submit the final counts via the data entry form.',
+    requirements: [
+        {
+            type: 'data-entry',
+            label: 'SKU-123 Stock'
+        },
+        {
+            type: 'data-entry',
+            label: 'SKU-456 Stock'
+        }
+    ]
   },
   {
     id: 'TSK-003',
@@ -41,6 +73,20 @@ export const initialTasks: Task[] = [
     status: 'Completed',
     type: 'Image',
     description: 'Set up the Point of Sale Materials for the new "Summer Sale" campaign. Submit a photo of the final setup for review.',
+    requirements: [
+        {
+            type: 'image',
+            label: 'Photo of the main entrance display',
+            min: 1,
+            max: 2,
+        },
+        {
+            type: 'image',
+            label: 'Photo of the checkout counter display',
+            min: 1,
+            max: 1,
+        }
+    ]
   },
   {
     id: 'TSK-004',
@@ -59,12 +105,18 @@ export const initialTasks: Task[] = [
     status: 'Active',
     type: 'Checklist',
     description: 'Conduct a thorough deep clean of the entire store, including staff areas. Use the checklist to ensure all areas are covered.',
-    checklist: [
-        { id: 1, text: 'Floors mopped and polished.', completed: false },
-        { id: 2, text: 'Windows and glass surfaces cleaned.', completed: false },
-        { id: 3, text: 'Shelving wiped down and organized.', completed: false },
-        { id: 4, text: 'Restrooms sanitized.', completed: false },
-        { id: 5, text: 'Staff room cleaned.', completed: false },
+    requirements: [
+        {
+            type: 'checklist',
+            label: 'Cleaning Checklist',
+            checklistItems: [
+                { text: 'Floors mopped and polished.' },
+                { text: 'Windows and glass surfaces cleaned.' },
+                { text: 'Shelving wiped down and organized.' },
+                { text: 'Restrooms sanitized.' },
+                { text: 'Staff room cleaned.' },
+            ]
+        }
     ]
   },
 ];
@@ -79,20 +131,27 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
     fullDueDate.setHours(parseInt(hours, 10));
     fullDueDate.setMinutes(parseInt(minutes, 10));
 
+    // Determine the primary type
+    const reqTypes = new Set(newTaskData.requirements?.map((r: Requirement) => r.type) || []);
+    let primaryType: Task['type'] = 'Data Entry'; // Default
+    if (reqTypes.size > 1) {
+        primaryType = 'Mixed';
+    } else if (reqTypes.has('image')) {
+        primaryType = 'Image';
+    } else if (reqTypes.has('checklist')) {
+        primaryType = 'Checklist';
+    }
+
+
     const newTask: Task = {
         id: `TSK-${String(existingTasks.length + 1).padStart(3, '0')}`,
         name: newTaskData.taskName,
         store: newTaskData.assignedTo,
-        dueDate: fullDueDate.toISOString(),
+        dueDate: format(fullDueDate, 'yyyy-MM-dd'),
         status: 'Draft',
-        // The main type can be derived from the first requirement, or set to a default
-        type: newTaskData.requirements?.[0]?.type === 'image' ? 'Image' : (newTaskData.requirements?.[0]?.type === 'checklist' ? 'Checklist' : 'Data Entry'),
+        type: primaryType,
         description: newTaskData.description,
-        // In a real app, you'd process and store the requirements array
+        requirements: newTaskData.requirements,
     };
-    // Note: This function doesn't permanently store the task.
-    // In a real application, this would interact with a database.
     return newTask;
 };
-
-    

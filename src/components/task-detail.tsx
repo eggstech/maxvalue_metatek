@@ -64,9 +64,9 @@ export function TaskDetail({ task }: { task: Task }) {
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-3xl">{task.name}</CardTitle>
-                        <CardDescription className="prose prose-sm dark:prose-invert max-w-none">
+                        <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground">
                            <ReactMarkdown>{task.description || "No description provided for this task."}</ReactMarkdown>
-                        </CardDescription>
+                        </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div>

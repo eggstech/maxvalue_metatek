@@ -1,17 +1,23 @@
-# Build stage
-FROM node:18 AS build-stage
+# Stage 1: Build Next.js app
+FROM node:18-alpine AS build-stage
 WORKDIR /app
 
+# Cài dependencies
 COPY package*.json ./
 RUN npm install
+
+# Copy source code
 COPY . .
+
+# Build (tạo .next và output static)
 RUN npm run build && npm run export
 
-# Production stage
-FROM nginx:alpine
+# Stage 2: Nginx serve static
+FROM nginx:alpine AS production-stage
 WORKDIR /usr/share/nginx/html
 
-COPY --from=build-stage /app/out ./
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy file build ra thư mục nginx
+COPY --from=build-stage /app/out/ .
 
-EXPOSE 80
+# Copy cấu hình nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf

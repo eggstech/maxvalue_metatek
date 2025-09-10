@@ -163,7 +163,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Provide a detailed description of the task requirements..." {...field} />
+                <Textarea placeholder="Provide a detailed description of the task requirements..." {...field} value={field.value ?? ''} />
               </FormControl>
               <FormDescription>
                 You can use markdown for **bold**, *italic*, and lists.
@@ -311,17 +311,17 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                     
                     {form.watch(`requirements.${index}.type`) === 'image' && (
                         <>
-                            <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Prompt/Label</FormLabel><FormControl><Input placeholder="e.g. 'Photo of front display'" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Prompt/Label</FormLabel><FormControl><Input placeholder="e.g. 'Photo of front display'" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
                             <div className="grid grid-cols-2 gap-4">
-                                <FormField control={form.control} name={`requirements.${index}.min`} render={({field}) => (<FormItem><FormLabel>Min Images</FormLabel><FormControl><Input type="number" placeholder="1" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10))}/></FormControl><FormMessage /></FormItem>)} />
-                                <FormField control={form.control} name={`requirements.${index}.max`} render={({field}) => (<FormItem><FormLabel>Max Images</FormLabel><FormControl><Input type="number" placeholder="5" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10))}/></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={form.control} name={`requirements.${index}.min`} render={({field}) => (<FormItem><FormLabel>Min Images</FormLabel><FormControl><Input type="number" placeholder="1" {...field} value={field.value ?? ''} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={form.control} name={`requirements.${index}.max`} render={({field}) => (<FormItem><FormLabel>Max Images</FormLabel><FormControl><Input type="number" placeholder="5" {...field} value={field.value ?? ''} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/></FormControl><FormMessage /></FormItem>)} />
                             </div>
                         </>
                     )}
 
                     {form.watch(`requirements.${index}.type`) === 'data-entry' && (
                         <div className="space-y-4">
-                            <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Field Name</FormLabel><FormControl><Input placeholder="e.g. 'Current stock count'" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Field Name</FormLabel><FormControl><Input placeholder="e.g. 'Current stock count'" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
                             <FormField
                                 control={form.control}
                                 name={`requirements.${index}.entryType`}
@@ -355,7 +355,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                                                 render={({ field }) => (
                                                     <FormItem className='flex-grow'>
                                                         <FormControl>
-                                                            <Input placeholder={`Option ${optionIndex + 1}`} {...field} />
+                                                            <Input placeholder={`Option ${optionIndex + 1}`} {...field} value={field.value ?? ''} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -376,7 +376,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
 
                     {form.watch(`requirements.${index}.type`) === 'checklist' && (
                         <div className='space-y-2'>
-                           <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Checklist Title</FormLabel><FormControl><Input placeholder="e.g. 'Morning Cleaning Checklist'" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                           <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Checklist Title</FormLabel><FormControl><Input placeholder="e.g. 'Morning Cleaning Checklist'" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
                             <FormLabel>Checklist Items</FormLabel>
                             {form.getValues(`requirements.${index}.checklistItems`)?.map((item, itemIndex) => (
                                 <div key={itemIndex} className="flex items-center gap-2">
@@ -386,7 +386,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                                         render={({ field }) => (
                                             <FormItem className='flex-grow'>
                                                 <FormControl>
-                                                    <Input placeholder={`Item ${itemIndex + 1}`} {...field} />
+                                                    <Input placeholder={`Item ${itemIndex + 1}`} {...field} value={field.value ?? ''} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>

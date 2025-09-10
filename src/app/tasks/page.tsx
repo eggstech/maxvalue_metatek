@@ -34,8 +34,10 @@ import {
 } from '@/components/ui/table';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { CreateTaskForm } from '@/components/create-task-form';
+import * as React from 'react';
+import { z } from 'zod';
 
-const tasks = [
+const initialTasks = [
   {
     id: 'TSK-001',
     name: 'Weekly Display Check',
@@ -92,6 +94,22 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 export default function TasksPage() {
+  const [tasks, setTasks] = React.useState(initialTasks);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+  const addTask = (newTaskData: any) => {
+    const newTask = {
+        id: `TSK-${String(tasks.length + 1).padStart(3, '0')}`,
+        name: newTaskData.taskName,
+        store: newTaskData.assignedTo,
+        dueDate: newTaskData.dueDate.toLocaleDateString('en-CA'),
+        status: 'Draft',
+        type: newTaskData.taskType,
+    };
+    setTasks(prevTasks => [...prevTasks, newTask]);
+  };
+
+
   return (
     <Card>
       <CardHeader>
@@ -102,7 +120,7 @@ export default function TasksPage() {
               Create, assign, and manage all your operational tasks.
             </CardDescription>
           </div>
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />
@@ -116,7 +134,7 @@ export default function TasksPage() {
                   Fill out the details below to create a new task.
                 </DialogDescription>
               </DialogHeader>
-              <CreateTaskForm />
+              <CreateTaskForm onTaskCreate={addTask} onAfterSubmit={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
         </div>

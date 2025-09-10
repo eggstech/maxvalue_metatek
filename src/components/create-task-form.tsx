@@ -47,7 +47,12 @@ const formSchema = z.object({
   }),
 });
 
-export function CreateTaskForm() {
+interface CreateTaskFormProps {
+    onTaskCreate: (values: z.infer<typeof formSchema>) => void;
+    onAfterSubmit?: () => void;
+}
+
+export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormProps) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,12 +62,13 @@ export function CreateTaskForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: Implement task creation logic
-    console.log(values);
+    onTaskCreate(values);
     toast({
       title: 'Task Created',
       description: `The task "${values.taskName}" has been successfully created.`,
     });
+    form.reset();
+    onAfterSubmit?.();
   }
 
   return (

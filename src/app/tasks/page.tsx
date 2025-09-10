@@ -1,3 +1,5 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,6 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +33,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
+import { CreateTaskForm } from '@/components/create-task-form';
 
 const tasks = [
   {
@@ -91,10 +102,23 @@ export default function TasksPage() {
               Create, assign, and manage all your operational tasks.
             </CardDescription>
           </div>
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Create Task
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Create Task
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create New Task</DialogTitle>
+                <DialogDescription>
+                  Fill out the details below to create a new task.
+                </DialogDescription>
+              </DialogHeader>
+              <CreateTaskForm />
+            </DialogContent>
+          </Dialog>
         </div>
       </CardHeader>
       <CardContent>

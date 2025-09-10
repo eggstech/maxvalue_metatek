@@ -14,6 +14,8 @@ import {
     TableHeader,
     TableRow,
   } from '@/components/ui/table';
+import { initialSubmissions } from "@/lib/submissions";
+import Link from "next/link";
 
 const StatusBadge = ({ status }: { status: string }) => {
     switch (status) {
@@ -28,11 +30,7 @@ const StatusBadge = ({ status }: { status: string }) => {
     }
 };
 
-const mockSubmissions = [
-    { id: 'SUB-001', store: 'Store A', submittedBy: 'User 2', date: '2024-07-19', status: 'Approved' },
-    { id: 'SUB-002', store: 'Store B', submittedBy: 'User 4', date: '2024-07-20', status: 'Pending Review' },
-    { id: 'SUB-003', store: 'Store E', submittedBy: 'User 8', date: '2024-07-21', status: 'Rejected' },
-]
+const mockSubmissions = initialSubmissions.slice(0, 3); // Take first 3 for the task detail page
 
 export function TaskDetail({ task }: { task: Task }) {
     return (
@@ -77,13 +75,17 @@ export function TaskDetail({ task }: { task: Task }) {
                                 <TableBody>
                                     {mockSubmissions.map(sub => (
                                         <TableRow key={sub.id}>
-                                            <TableCell className="font-medium">{sub.id}</TableCell>
+                                            <TableCell className="font-medium">
+                                                <Link href={`/submissions/${sub.id}`} className="text-primary hover:underline">
+                                                    {sub.id}
+                                                </Link>
+                                            </TableCell>
                                             <TableCell>{sub.store}</TableCell>
                                             <TableCell>{sub.submittedBy}</TableCell>
                                             <TableCell>{sub.date}</TableCell>
                                             <TableCell>
                                                 <Badge variant={
-                                                    sub.status === 'Approved' ? 'default' : sub.status === 'Rejected' ? 'destructive' : 'secondary'
+                                                    sub.status === 'Approved' ? 'default' : sub.status === 'Rejected' ? 'destructive' : sub.status === 'Pending Review' ? 'secondary' : 'outline'
                                                 }>{sub.status}</Badge>
                                             </TableCell>
                                         </TableRow>

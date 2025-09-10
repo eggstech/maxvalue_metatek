@@ -235,9 +235,9 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Lặp lại Hằng ngày</FormLabel>
+                <FormLabel>Repeat Daily</FormLabel>
                 <FormDescription>
-                  Nếu được bật, tác vụ này sẽ tự động được tạo lại mỗi ngày.
+                  If enabled, this task will be automatically recreated every day.
                 </FormDescription>
               </div>
               <FormControl>
@@ -357,3 +357,5 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
     </Form>
   );
 }
+
+    

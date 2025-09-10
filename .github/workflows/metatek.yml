@@ -1,4 +1,4 @@
-name: Deploy Metattek
+name: Deploy Metatek
 
 on:
   pull_request:

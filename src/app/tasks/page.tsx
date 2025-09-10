@@ -1,6 +1,5 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,27 +16,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { MoreHorizontal, PlusCircle } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { CreateTaskForm } from '@/components/create-task-form';
 import * as React from 'react';
-import { z } from 'zod';
+import { columns, Task } from './columns';
+import { DataTable } from '@/components/data-table';
 
-const initialTasks = [
+const initialTasks: Task[] = [
   {
     id: 'TSK-001',
     name: 'Weekly Display Check',
@@ -80,25 +65,13 @@ const initialTasks = [
   },
 ];
 
-const StatusBadge = ({ status }: { status: string }) => {
-  switch (status) {
-    case 'Active':
-      return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100/80 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200 dark:border-blue-700">Active</Badge>;
-    case 'Completed':
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700">Completed</Badge>;
-    case 'Draft':
-      return <Badge variant="secondary">Draft</Badge>;
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-};
 
 export default function TasksPage() {
   const [tasks, setTasks] = React.useState(initialTasks);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const addTask = (newTaskData: any) => {
-    const newTask = {
+    const newTask: Task = {
         id: `TSK-${String(tasks.length + 1).padStart(3, '0')}`,
         name: newTaskData.taskName,
         store: newTaskData.assignedTo,
@@ -140,53 +113,7 @@ export default function TasksPage() {
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Task Name</TableHead>
-              <TableHead>Assigned To</TableHead>
-              <TableHead>Due Date</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tasks.map((task) => (
-              <TableRow key={task.id}>
-                <TableCell className="font-medium">{task.name}</TableCell>
-                <TableCell>{task.store}</TableCell>
-                <TableCell>{task.dueDate}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{task.type}</Badge>
-                </TableCell>
-                <TableCell>
-                  <StatusBadge status={task.status} />
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button aria-haspopup="true" size="icon" variant="ghost">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Toggle menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>View Submissions</DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable columns={columns} data={tasks} />
       </CardContent>
     </Card>
   );

@@ -171,6 +171,7 @@ export default function ReviewPage() {
                                                     data-ai-hint={result.imageHint}
                                                     />
                                                 </div>
+
                                             )}
                                             {result.type === 'checklist' && result.checklist && (
                                                 <ul className="space-y-3 rounded-md border p-4">

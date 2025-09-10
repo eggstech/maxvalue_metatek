@@ -51,7 +51,7 @@ export default function TasksPage() {
                 Create Task
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New Task</DialogTitle>
                 <DialogDescription>
@@ -69,3 +69,5 @@ export default function TasksPage() {
     </Card>
   );
 }
+
+    

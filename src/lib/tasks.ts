@@ -74,16 +74,25 @@ export function getTaskById(id: string): Task | undefined {
 }
 
 export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
+    const fullDueDate = new Date(newTaskData.dueDate);
+    const [hours, minutes] = newTaskData.dueTime.split(':');
+    fullDueDate.setHours(parseInt(hours, 10));
+    fullDueDate.setMinutes(parseInt(minutes, 10));
+
     const newTask: Task = {
         id: `TSK-${String(existingTasks.length + 1).padStart(3, '0')}`,
         name: newTaskData.taskName,
         store: newTaskData.assignedTo,
-        dueDate: newTaskData.dueDate.toLocaleDateString('en-CA'),
+        dueDate: fullDueDate.toISOString(),
         status: 'Draft',
-        type: newTaskData.taskType as 'Checklist' | 'Data Entry' | 'Image',
-        description: '',
+        // The main type can be derived from the first requirement, or set to a default
+        type: newTaskData.requirements?.[0]?.type === 'image' ? 'Image' : (newTaskData.requirements?.[0]?.type === 'checklist' ? 'Checklist' : 'Data Entry'),
+        description: newTaskData.description,
+        // In a real app, you'd process and store the requirements array
     };
     // Note: This function doesn't permanently store the task.
     // In a real application, this would interact with a database.
     return newTask;
 };
+
+    

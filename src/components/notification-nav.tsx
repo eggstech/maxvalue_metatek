@@ -22,7 +22,7 @@ export function NotificationNav() {
         <Button variant="ghost" className="relative h-9 w-9 rounded-full">
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <Badge className="absolute top-0 right-0 h-5 w-5 justify-center p-0 text-xs">
+            <Badge className="absolute top-1 right-1 h-4 w-4 justify-center p-0 text-xs">
               {unreadCount}
             </Badge>
           )}

@@ -15,6 +15,7 @@ import { UserNav } from '@/components/user-nav';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { NotificationNav } from '@/components/notification-nav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -85,7 +86,10 @@ export default function RootLayout({
                   </div>
                 </form>
               </div>
-              <UserNav />
+              <div className="flex items-center gap-2">
+                <NotificationNav />
+                <UserNav />
+              </div>
             </header>
             <main className="flex-1 p-4 sm:p-6">{children}</main>
           </SidebarInset>

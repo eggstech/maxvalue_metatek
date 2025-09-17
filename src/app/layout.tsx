@@ -45,7 +45,7 @@ export default function RootLayout({
               <div className="flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 100 40"
+                  viewBox="0 0 95 40"
                   className="w-8 h-8 text-primary"
                   fill="currentColor"
                 >

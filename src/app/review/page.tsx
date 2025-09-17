@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -139,7 +140,7 @@ export default function ReviewPage() {
                                                 <div key={req.label} className="flex items-start gap-3 text-sm">
                                                     <RequirementIcon type={req.type} />
                                                     <div className="flex-1">
-                                                        <p className='font-medium'>{req.label}</p>
+                                                        <p className='font-medium text-foreground'>{req.label}</p>
                                                         {req.type === 'image' && <p className="text-xs text-muted-foreground">Requires {req.min}-{req.max} image(s)</p>}
                                                         {req.type === 'checklist' && req.checklistItems && (
                                                             <ul className='mt-1 space-y-1 text-xs text-muted-foreground list-disc list-inside'>
@@ -171,6 +172,7 @@ export default function ReviewPage() {
                                                     data-ai-hint={result.imageHint}
                                                     />
                                                 </div>
+
                                             )}
                                             {result.type === 'checklist' && result.checklist && (
                                                 <ul className="space-y-3 rounded-md border p-4">

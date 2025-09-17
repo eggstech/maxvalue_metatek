@@ -15,6 +15,7 @@ import { UserNav } from '@/components/user-nav';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { NotificationNav } from '@/components/notification-nav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -45,16 +46,21 @@ export default function RootLayout({
               <div className="flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-6 h-6 text-primary"
+                  viewBox="0 0 95 40"
+                  className="w-8 h-8 text-primary"
+                  fill="currentColor"
                 >
-                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" />
-                  <path d="M8.5 12.5l3 3 4.5-4.5" />
+                  <defs>
+                    <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 1}} />
+                      <stop offset="100%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.5}} />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 40 L10 40 L25 0 L15 0 Z" />
+                  <path d="M28 0 L48 0 L48 8 L36 8 L36 16 L46 16 L46 24 L36 24 L36 32 L48 32 L48 40 L28 40 Z" />
+                  <path d="M55 20 a 18 18 0 1 1 36 0 a 18 18 0 1 1 -36 0" />
+                  <path d="M57 20 a 16 16 0 1 1 32 0 a 16 16 0 1 1 -32 0" fill="hsl(var(--sidebar-background))" />
+                  <path d="M 50 18 a 22 10 0 1 0 0 4 a 22 10 0 1 0 0 -4" fill="url(#ring-gradient)" transform="rotate(-15 72 20)" />
                 </svg>
                 <h1 className="text-xl font-semibold text-sidebar-foreground">
                   ConnectFlow
@@ -80,7 +86,10 @@ export default function RootLayout({
                   </div>
                 </form>
               </div>
-              <UserNav />
+              <div className="flex items-center gap-2">
+                <NotificationNav />
+                <UserNav />
+              </div>
             </header>
             <main className="flex-1 p-4 sm:p-6">{children}</main>
           </SidebarInset>

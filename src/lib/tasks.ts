@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 
 export type Requirement = {
@@ -15,7 +16,7 @@ export type Task = {
   name: string;
   store: string;
   dueDate: string;
-  status: 'Active' | 'Completed' | 'Draft';
+  status: 'Active' | 'Completed' | 'Draft' | 'Pending Review' | 'Overdue' | 'Rejected';
   type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed';
   description?: string;
   requirements?: Requirement[];
@@ -76,7 +77,7 @@ export const initialTasks: Task[] = [
     name: 'New Campaign POSM Setup',
     store: 'Stores Group A',
     dueDate: '2024-07-20',
-    status: 'Completed',
+    status: 'Pending Review',
     type: 'Image',
     description: 'Set up the Point of Sale Materials for the new "Summer Sale" campaign. Submit a photo of the final setup for review.',
     requirements: [
@@ -90,9 +91,9 @@ export const initialTasks: Task[] = [
             type: 'checklist',
             label: 'Setup Checklist',
             checklistItems: [
-              { id: 1, text: 'Main banner is visible from entrance.'},
-              { id: 2, text: 'Wobblers are attached to featured products.'},
-              { id: 3, text: 'Brochures are available at the counter.'},
+              { text: 'Main banner is visible from entrance.'},
+              { text: 'Wobblers are attached to featured products.'},
+              { text: 'Brochures are available at the counter.'},
             ]
         }
     ]
@@ -131,9 +132,9 @@ export const initialTasks: Task[] = [
    {
     id: 'TSK-006',
     name: 'Stock Count Verification',
-    store: 'All Stores',
+    store: 'Store B',
     dueDate: '2024-08-15',
-    status: 'Active',
+    status: 'Completed',
     type: 'Mixed',
     description: 'Verify the stock count from the latest delivery and check for discrepancies.',
     requirements: [
@@ -158,8 +159,8 @@ export const initialTasks: Task[] = [
     id: 'TSK-007',
     name: 'Cleanliness Audit Photo',
     store: 'All Stores',
-    dueDate: '2024-08-10',
-    status: 'Active',
+    dueDate: '2024-07-01',
+    status: 'Overdue',
     type: 'Image',
     description: 'Submit a photo of the main customer area to verify cleanliness standards are being met.',
     requirements: [
@@ -180,6 +181,59 @@ export const initialTasks: Task[] = [
     ],
     isRecurring: true,
   },
+    {
+    id: 'TSK-008',
+    name: 'Price Check',
+    store: 'Store B',
+    dueDate: '2024-07-22',
+    status: 'Rejected',
+    type: 'Data Entry',
+    description: 'Verify prices for 5 specific SKUs.',
+    requirements: [
+        {
+            type: 'data-entry',
+            label: 'SKU-101 Price',
+            entryType: 'text'
+        },
+    ]
+  },
+  {
+    id: 'TSK-009',
+    name: 'Monthly Sales Display',
+    store: 'Store B',
+    dueDate: '2024-07-21',
+    status: 'Completed',
+    type: 'Image',
+    description: 'Setup the new monthly sales promotion display near the entrance.',
+    requirements: [
+      {
+        type: 'image',
+        label: 'Photo of the sales display',
+        min: 1,
+        max: 1
+      }
+    ],
+    isRecurring: true,
+  },
+  {
+    id: 'TSK-010',
+    name: 'Safety Compliance Check',
+    store: 'Store E',
+    dueDate: '2024-07-23',
+    status: 'Completed',
+    type: 'Checklist',
+    description: 'Perform weekly safety check.',
+    requirements: [
+      {
+        type: 'checklist',
+        label: 'Safety Checklist',
+        checklistItems: [
+          { text: 'Fire extinguisher is accessible.' },
+          { text: 'Emergency exits are clear.' },
+        ]
+      }
+    ],
+  }
 ];
 
 export function getTaskById(id: string): Task | undefined {

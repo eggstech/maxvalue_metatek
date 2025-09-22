@@ -23,6 +23,12 @@ const StatusBadge = ({ status }: { status: string }) => {
         return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100/80 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200 dark:border-blue-700">Active</Badge>;
       case 'Completed':
         return <Badge className="bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700">Completed</Badge>;
+      case 'Pending Review':
+        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80 dark:bg-yellow-900/50 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700">Pending Review</Badge>;
+      case 'Overdue':
+        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-700">Overdue</Badge>;
+      case 'Rejected':
+          return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100/80 dark:bg-orange-900/50 dark:text-orange-300 border-orange-200 dark:border-orange-700">Rejected</Badge>;
       case 'Draft':
         return <Badge variant="secondary">Draft</Badge>;
       default:

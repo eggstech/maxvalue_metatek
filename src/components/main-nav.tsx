@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -12,11 +13,12 @@ import {
   Eye,
   LayoutDashboard,
   Settings,
+  Repeat,
 } from 'lucide-react';
 import Link from 'next/link';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/review', label: 'Review', icon: Eye },
   { href: '/reports', label: 'Reports', icon: BarChart3 },
@@ -26,13 +28,23 @@ const menuItems = [
 export function MainNav() {
   const pathname = usePathname();
 
+  const isActive = (href: string) => {
+    if (href === '/tasks') {
+      return pathname.startsWith('/tasks');
+    }
+    if (href === '/') {
+        return pathname === '/dashboard' || pathname === '/';
+    }
+    return pathname === href;
+  }
+
   return (
     <SidebarMenu>
       {menuItems.map((item) => (
         <SidebarMenuItem key={item.href}>
           <SidebarMenuButton
             asChild
-            isActive={pathname === item.href}
+            isActive={isActive(item.href)}
             tooltip={item.label}
           >
             <Link href={item.href}>

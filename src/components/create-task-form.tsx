@@ -62,8 +62,18 @@ const formSchema = z.object({
     required_error: 'Please select a store or group to assign the task to.',
   }),
   isRecurring: z.boolean().default(false).optional(),
+  repeatEndDate: z.date().optional(),
   requirements: z.array(requirementSchema).optional(),
+}).refine((data) => {
+    if (data.isRecurring && !data.repeatEndDate) {
+        return false;
+    }
+    return true;
+    }, {
+        message: 'End date is required for recurring tasks.',
+        path: ['repeatEndDate'],
 });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -89,6 +99,8 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
     control: form.control,
     name: 'requirements',
   });
+
+  const isRecurring = form.watch('isRecurring');
 
   const addChecklistItem = (reqIndex: number) => {
     const requirements = form.getValues('requirements');
@@ -173,14 +185,14 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
           <FormField
             control={form.control}
             name="dueDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Due Date</FormLabel>
-                <Popover>
+                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
@@ -251,27 +263,70 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="isRecurring"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel>Repeat Daily</FormLabel>
-                <FormDescription>
-                  If enabled, this task will be automatically recreated every day.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        
+        <div className="space-y-4 rounded-lg border p-4">
+            <FormField
+              control={form.control}
+              name="isRecurring"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between">
+                  <div className="space-y-0.5">
+                    <FormLabel>Repeat Daily</FormLabel>
+                    <FormDescription>
+                      The task will be recreated daily. Turn off to disable.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {isRecurring && (
+                <FormField
+                control={form.control}
+                name="repeatEndDate"
+                render={({ field }) => (
+                  <FormItem className='pt-2'>
+                    <FormLabel>End Date</FormLabel>
+                     <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={'outline'}
+                            className={cn(
+                              'w-full pl-3 text-left font-normal',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, 'PPP')
+                            ) : (
+                              <span>Pick an end date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) => date < (form.getValues('dueDate') || new Date())}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+        </div>
 
 
         <Separator />

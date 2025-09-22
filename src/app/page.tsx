@@ -1,5 +1,7 @@
+
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -7,203 +9,62 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-} from 'recharts';
-import {
-  Activity,
-  ClipboardCheck,
-  ClipboardList,
-  Clock,
-} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Building, UserCheck } from 'lucide-react';
 
-const taskActivityData = [
-  { date: 'Mon', created: 30, completed: 22 },
-  { date: 'Tue', created: 45, completed: 35 },
-  { date: 'Wed', created: 28, completed: 20 },
-  { date: 'Thu', created: 52, completed: 48 },
-  { date: 'Fri', created: 60, completed: 55 },
-  { date: 'Sat', created: 15, completed: 12 },
-  { date: 'Sun', created: 18, completed: 10 },
-];
 
-const completionRateData = [
-  { store: 'Store A', rate: 92 },
-  { store: 'Store B', rate: 85 },
-  { store: 'Store C', rate: 98 },
-  { store: 'Store D', rate: 78 },
-  { store: 'Store E', rate: 95 },
-  { store: 'Store F', rate: 88 },
-];
+export default function LoginPage() {
+    const router = useRouter();
 
-const recentSubmissions = [
-  { id: 'TSK-001', store: 'Store A', task: 'Display Check', status: 'Completed' },
-  { id: 'TSK-002', store: 'Store C', task: 'Stock Count', status: 'Pending Review' },
-  { id: 'TSK-003', store: 'Store B', task: 'Cleanliness Audit', status: 'Completed' },
-  { id: 'TSK-004', store: 'Store D', task: 'POSM Setup', status: 'Overdue' },
-  { id: 'TSK-005', store: 'Store A', task: 'Price Verification', status: 'Pending Review' },
-];
+    const handleAdminLogin = () => {
+        router.push('/dashboard');
+    };
 
-const StatusBadge = ({ status }: { status: string }) => {
-  switch (status) {
-    case 'Completed':
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700">Completed</Badge>;
-    case 'Pending Review':
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80 dark:bg-yellow-900/50 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700">Pending Review</Badge>;
-    case 'Overdue':
-      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-700">Overdue</Badge>;
-    default:
-      return <Badge variant="secondary">{status}</Badge>;
-  }
-};
+    const handleFieldLogin = () => {
+        router.push('/field');
+    };
 
-export default function DashboardPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Tasks</CardTitle>
-            <ClipboardList className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1,254</div>
-            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completed Tasks</CardTitle>
-            <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">982</div>
-            <p className="text-xs text-muted-foreground">78.3% completion rate</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">45</div>
-            <p className="text-xs text-muted-foreground">+5 from yesterday</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overdue Tasks</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">12</div>
-            <p className="text-xs text-muted-foreground">Action required</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Task Activity This Week</CardTitle>
-            <CardDescription>Created vs. Completed tasks.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={taskActivityData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    background: 'hsl(var(--background))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 'var(--radius)',
-                  }}
-                />
-                <Line type="monotone" dataKey="created" stroke="hsl(var(--primary))" strokeWidth={2} name="Created" />
-                <Line type="monotone" dataKey="completed" stroke="hsl(var(--chart-2))" strokeWidth={2} name="Completed" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Completion Rate by Store</CardTitle>
-            <CardDescription>Top performing stores.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={completionRateData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis type="category" dataKey="store" width={60} stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip
-                  cursor={{ fill: 'hsl(var(--accent))' }}
-                  contentStyle={{
-                    background: 'hsl(var(--background))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 'var(--radius)',
-                  }}
-                />
-                <Bar dataKey="rate" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Submissions</CardTitle>
-          <CardDescription>
-            Latest task submissions from stores pending your review.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Task ID</TableHead>
-                <TableHead>Store</TableHead>
-                <TableHead>Task Name</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentSubmissions.map((submission) => (
-                <TableRow key={submission.id}>
-                  <TableCell className="font-medium">{submission.id}</TableCell>
-                  <TableCell>{submission.store}</TableCell>
-                  <TableCell>{submission.task}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={submission.status} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  );
+    return (
+        <div className="flex min-h-screen items-center justify-center bg-background">
+            <Card className="w-full max-w-md shadow-2xl">
+                <CardHeader className="text-center">
+                    <div className="flex items-center gap-2 justify-center mb-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 95 40"
+                            className="w-10 h-10 text-primary"
+                            fill="currentColor"
+                        >
+                            <defs>
+                                <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 1}} />
+                                <stop offset="100%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 0.5}} />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0 40 L10 40 L25 0 L15 0 Z" />
+                            <path d="M28 0 L48 0 L48 8 L36 8 L36 16 L46 16 L46 24 L36 24 L36 32 L48 32 L48 40 L28 40 Z" />
+                            <path d="M55 20 a 18 18 0 1 1 36 0 a 18 18 0 1 1 -36 0" />
+                            <path d="M57 20 a 16 16 0 1 1 32 0 a 16 16 0 1 1 -32 0" fill="hsl(var(--card))" />
+                            <path d="M 50 18 a 22 10 0 1 0 0 4 a 22 10 0 1 0 0 -4" fill="url(#ring-gradient)" transform="rotate(-15 72 20)" />
+                        </svg>
+                        <h1 className="text-3xl font-bold">
+                            ConnectFlow
+                        </h1>
+                    </div>
+                    <CardTitle className="text-2xl">Welcome Back</CardTitle>
+                    <CardDescription>Select your role to sign in.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                     <Button className="w-full h-16 text-lg" onClick={handleAdminLogin}>
+                        <Building className="mr-3 h-6 w-6" />
+                        Login as Admin
+                    </Button>
+                     <Button variant="secondary" className="w-full h-16 text-lg" onClick={handleFieldLogin}>
+                        <UserCheck className="mr-3 h-6 w-6" />
+                        Login as Field User
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+    );
 }

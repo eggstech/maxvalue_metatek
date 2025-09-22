@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Avatar,
   AvatarFallback,
@@ -16,9 +18,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { placeholderImages } from '@/lib/placeholder-images.json';
 import { CreditCard, LogOut, Settings, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export function UserNav() {
   const userAvatar = placeholderImages.find(p => p.id === "user-avatar-1");
+  const router = useRouter();
+
+  const handleLogout = () => {
+    router.push('/');
+  };
 
   return (
     <DropdownMenu>
@@ -58,7 +66,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

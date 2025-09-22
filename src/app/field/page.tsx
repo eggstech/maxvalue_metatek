@@ -14,13 +14,13 @@ import { columns } from "./columns";
 const getStatusInfo = (status: Task['status']) => {
     switch (status) {
         case 'Active':
-            return { icon: <Clock className="h-5 w-5 text-yellow-500" />, text: 'Due' };
+            return { icon: <Clock className="h-5 w-5 text-blue-500" />, text: 'Due' };
         case 'Overdue':
             return { icon: <Clock className="h-5 w-5 text-red-500" />, text: 'Overdue' };
         case 'Rejected':
             return { icon: <MessageSquareWarning className="h-5 w-5 text-orange-500" />, text: 'Rejected' };
         case 'Pending Review':
-            return { icon: <Hourglass className="h-5 w-5 text-blue-500" />, text: 'Submitted' };
+            return { icon: <Hourglass className="h-5 w-5 text-yellow-500" />, text: 'Submitted' };
         case 'Completed':
             return { icon: <CheckCircle2 className="h-5 w-5 text-green-500" />, text: 'Completed' };
         default:
@@ -43,9 +43,19 @@ const getActionText = (status: Task['status']) => {
 
 const fieldTasks = initialTasks.filter(t => ['Active', 'Completed', 'Overdue', 'Rejected', 'Pending Review'].includes(t.status));
 
-export default function FieldTaskPage() {
+const statusOrder: Record<Task['status'], number> = {
+    'Rejected': 1,
+    'Overdue': 2,
+    'Active': 3,
+    'Pending Review': 4,
+    'Completed': 5,
+    'Draft': 6, // Should not be in field view, but good to have
+};
 
-    const [tasks, setTasks] = React.useState(fieldTasks);
+export default function FieldTaskPage() {
+    const [tasks] = React.useState(() => {
+        return [...fieldTasks].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+    });
     
     const pendingTasks = tasks.filter(t => ['Active', 'Overdue', 'Rejected'].includes(t.status));
     const completedTasks = tasks.filter(t => ['Completed', 'Pending Review'].includes(t.status));
@@ -76,7 +86,22 @@ export default function FieldTaskPage() {
                                         const actionText = getActionText(task.status);
                                         const cardClass = task.status === 'Rejected' 
                                             ? "border-orange-500/50 hover:border-orange-500" 
+                                            : task.status === 'Overdue'
+                                            ? "border-red-500/50 hover:border-red-500"
                                             : "hover:border-primary";
+
+                                        const statusBadge = () => {
+                                            switch(task.status) {
+                                                case 'Rejected':
+                                                    return <Badge variant={'destructive'}>Rejected</Badge>;
+                                                case 'Overdue':
+                                                    return <Badge className="bg-red-100 text-red-800 border-red-200">Overdue</Badge>;
+                                                case 'Active':
+                                                    return <Badge className="bg-blue-100 text-blue-800 border-blue-200">To Do</Badge>;
+                                                default:
+                                                    return <Badge variant={'outline'}>{task.status}</Badge>;
+                                            }
+                                        }
 
                                         return (
                                             <Link href={`/field/task/${task.id}`} key={task.id}>
@@ -92,9 +117,7 @@ export default function FieldTaskPage() {
                                                         </CardDescription>
                                                     </CardHeader>
                                                     <CardContent>
-                                                        <Badge variant={task.status === 'Rejected' ? 'destructive' : 'outline'}>
-                                                            {task.status}
-                                                        </Badge>
+                                                        {statusBadge()}
                                                     </CardContent>
                                                     <CardFooter className="pt-4 justify-end">
                                                         <div className="flex items-center text-sm font-medium text-primary">
@@ -127,10 +150,10 @@ export default function FieldTaskPage() {
                                         const { icon, text: datePrefix } = getStatusInfo(task.status);
                                         const actionText = getActionText(task.status);
                                         const cardClass = task.status === 'Pending Review' 
-                                            ? "bg-blue-500/5 hover:border-blue-500/50"
+                                            ? "bg-yellow-500/5 hover:border-yellow-500/50"
                                             : "bg-muted/70 hover:border-muted-foreground/50";
                                         const titleClass = task.status === 'Pending Review' 
-                                            ? "text-blue-900 dark:text-blue-200 group-hover:text-blue-600"
+                                            ? "text-yellow-900 dark:text-yellow-200 group-hover:text-yellow-600"
                                             : "text-muted-foreground group-hover:text-foreground";
                                         
                                         return (
@@ -147,7 +170,7 @@ export default function FieldTaskPage() {
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent>
-                                                    <Badge variant={task.status === 'Pending Review' ? 'default' : 'secondary'} className={task.status === 'Pending Review' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}>
+                                                    <Badge variant={task.status === 'Pending Review' ? 'default' : 'secondary'} className={task.status === 'Pending Review' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : ''}>
                                                         {task.status}
                                                     </Badge>
                                                 </CardContent>

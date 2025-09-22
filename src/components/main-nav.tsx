@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -17,7 +18,7 @@ import {
 import Link from 'next/link';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/review', label: 'Review', icon: Eye },
   { href: '/reports', label: 'Reports', icon: BarChart3 },
@@ -30,6 +31,9 @@ export function MainNav() {
   const isActive = (href: string) => {
     if (href === '/tasks') {
       return pathname.startsWith('/tasks');
+    }
+    if (href === '/') {
+        return pathname === '/dashboard' || pathname === '/';
     }
     return pathname === href;
   }

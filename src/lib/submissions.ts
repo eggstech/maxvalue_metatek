@@ -214,3 +214,12 @@ export const initialSubmissions: Submission[] = [
 export function getSubmissionById(id: string): Submission | undefined {
     return initialSubmissions.find(sub => sub.id === id);
 }
+
+export function getLastSubmissionForTask(taskId: string): Submission | undefined {
+    const submissionsForTask = initialSubmissions.filter(sub => sub.taskId === taskId);
+    if (submissionsForTask.length === 0) {
+        return undefined;
+    }
+    // Simple sort by date string - for more robust solution, parse dates
+    return submissionsForTask.sort((a, b) => b.date.localeCompare(a.date))[0];
+}

@@ -7,15 +7,16 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { getTaskById } from '@/lib/tasks';
-import { Camera, CheckSquare, Image as ImageIcon, Send, TextCursorInput, ListChecks, Info } from 'lucide-react';
+import { Camera, CheckSquare, Image as ImageIcon, Send, TextCursorInput, ListChecks, Info, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter, useParams } from 'next/navigation';
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { getLastSubmissionForTask } from '@/lib/submissions';
 
 
 const RequirementIcon = ({type}: {type: string}) => {
@@ -40,6 +41,10 @@ export default function FieldSubmissionPage() {
     notFound();
   }
 
+  const lastSubmission = task.status === 'Rejected' ? getLastSubmissionForTask(task.id) : null;
+  const isActionable = ['Active', 'Overdue', 'Rejected'].includes(task.status);
+
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -58,13 +63,20 @@ export default function FieldSubmissionPage() {
         description: `Your submission for "${task.name}" has been recorded.`,
         className: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700'
     });
-    router.push('/field');
+    router.push('/field/tasks');
   }
-
-  const isCompleted = task.status === 'Completed';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+        {task.status === 'Rejected' && lastSubmission?.feedback && (
+             <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Feedback from Reviewer</AlertTitle>
+                <AlertDescription>
+                    {lastSubmission.feedback}
+                </AlertDescription>
+            </Alert>
+        )}
         <Card>
             <CardHeader>
                 <CardTitle className="text-2xl">{task.name}</CardTitle>
@@ -82,8 +94,8 @@ export default function FieldSubmissionPage() {
         <Card>
             <CardHeader>
                 <CardTitle>Submission Details</CardTitle>
-                {isCompleted ? (
-                     <CardDescription>This task has already been completed. Viewing in read-only mode.</CardDescription>
+                {!isActionable ? (
+                     <CardDescription>This task is already submitted or completed. Viewing in read-only mode.</CardDescription>
                 ) : (
                     <CardDescription>Fulfill each requirement listed below.</CardDescription>
                 )}
@@ -97,7 +109,7 @@ export default function FieldSubmissionPage() {
                                 <Label className='text-base font-semibold'>{req.label}</Label>
                             </div>
                             
-                            <fieldset disabled={isCompleted} className="space-y-4">
+                            <fieldset disabled={!isActionable} className="space-y-4">
                                 {req.type === 'image' && (
                                     <div>
                                         <Input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
@@ -158,11 +170,11 @@ export default function FieldSubmissionPage() {
             </CardContent>
         </Card>
 
-        {!isCompleted && (
+        {isActionable && (
             <div className='flex justify-end'>
                 <Button type="submit" size="lg">
                     <Send className="mr-2 h-4 w-4" />
-                    Submit Task
+                    {task.status === 'Rejected' ? 'Resubmit Task' : 'Submit Task'}
                 </Button>
             </div>
         )}

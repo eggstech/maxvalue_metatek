@@ -15,7 +15,7 @@ export type Task = {
   name: string;
   store: string;
   dueDate: string;
-  status: 'Active' | 'Completed' | 'Draft';
+  status: 'Active' | 'Completed' | 'Draft' | 'Pending Review' | 'Overdue' | 'Rejected';
   type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed';
   description?: string;
   requirements?: Requirement[];
@@ -90,9 +90,9 @@ export const initialTasks: Task[] = [
             type: 'checklist',
             label: 'Setup Checklist',
             checklistItems: [
-              { id: 1, text: 'Main banner is visible from entrance.'},
-              { id: 2, text: 'Wobblers are attached to featured products.'},
-              { id: 3, text: 'Brochures are available at the counter.'},
+              { text: 'Main banner is visible from entrance.'},
+              { text: 'Wobblers are attached to featured products.'},
+              { text: 'Brochures are available at the counter.'},
             ]
         }
     ]
@@ -133,7 +133,7 @@ export const initialTasks: Task[] = [
     name: 'Stock Count Verification',
     store: 'All Stores',
     dueDate: '2024-08-15',
-    status: 'Active',
+    status: 'Pending Review',
     type: 'Mixed',
     description: 'Verify the stock count from the latest delivery and check for discrepancies.',
     requirements: [
@@ -158,8 +158,8 @@ export const initialTasks: Task[] = [
     id: 'TSK-007',
     name: 'Cleanliness Audit Photo',
     store: 'All Stores',
-    dueDate: '2024-08-10',
-    status: 'Active',
+    dueDate: '2024-07-01',
+    status: 'Overdue',
     type: 'Image',
     description: 'Submit a photo of the main customer area to verify cleanliness standards are being met.',
     requirements: [
@@ -179,6 +179,22 @@ export const initialTasks: Task[] = [
         }
     ],
     isRecurring: true,
+  },
+    {
+    id: 'TSK-008',
+    name: 'Price Check',
+    store: 'Store B',
+    dueDate: '2024-07-22',
+    status: 'Rejected',
+    type: 'Data Entry',
+    description: 'Verify prices for 5 specific SKUs. The previous submission had errors.',
+    requirements: [
+        {
+            type: 'data-entry',
+            label: 'SKU-101 Price',
+            entryType: 'text'
+        },
+    ]
   },
 ];
 

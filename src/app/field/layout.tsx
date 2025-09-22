@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { NotificationNav } from "@/components/notification-nav";
 
 
 export default function FieldLayout({
@@ -40,7 +41,10 @@ export default function FieldLayout({
                             ConnectFlow
                         </h1>
                 </div>
-                <UserNav />
+                <div className="flex items-center gap-2">
+                    <NotificationNav />
+                    <UserNav />
+                </div>
             </header>
             <main className="flex flex-1 flex-col p-4 md:p-8">
                 {children}

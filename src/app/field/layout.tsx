@@ -2,11 +2,12 @@
 'use client';
 
 import { UserNav } from "@/components/user-nav";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, LayoutDashboard, ListTodo } from "lucide-react";
 import Link from "next/link";
 import { NotificationNav } from "@/components/notification-nav";
+import { cn } from "@/lib/utils";
 
 
 export default function FieldLayout({
@@ -15,14 +16,19 @@ export default function FieldLayout({
     children: React.ReactNode;
   }>) {
     const router = useRouter();
+    const pathname = usePathname();
+
+    const isDashboard = pathname === '/field' || pathname === '/field/dashboard';
+    const isTasks = pathname === '/field/tasks';
+
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
             <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/field')}>
+                <div className="flex items-center gap-4">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 95 40"
-                            className="w-8 h-8 text-primary"
+                            className="w-8 h-8 text-primary hidden sm:block"
                             fill="currentColor"
                         >
                             <defs>
@@ -37,9 +43,20 @@ export default function FieldLayout({
                             <path d="M57 20 a 16 16 0 1 1 32 0 a 16 16 0 1 1 -32 0" fill="hsl(var(--background))" />
                             <path d="M 50 18 a 22 10 0 1 0 0 4 a 22 10 0 1 0 0 -4" fill="url(#ring-gradient)" transform="rotate(-15 72 20)" />
                         </svg>
-                        <h1 className="text-xl font-bold">
-                            ConnectFlow
-                        </h1>
+                        <nav className="flex items-center gap-2">
+                           <Button asChild variant={isDashboard ? 'secondary': 'ghost'} size="sm">
+                                <Link href="/field/dashboard">
+                                    <LayoutDashboard className="h-4 w-4" />
+                                    <span className="hidden sm:inline-block ml-2">Dashboard</span>
+                                </Link>
+                           </Button>
+                           <Button asChild variant={isTasks ? 'secondary': 'ghost'} size="sm">
+                                <Link href="/field/tasks">
+                                    <ListTodo className="h-4 w-4" />
+                                    <span className="hidden sm:inline-block ml-2">Tasks</span>
+                                </Link>
+                           </Button>
+                        </nav>
                 </div>
                 <div className="flex items-center gap-2">
                     <NotificationNav />

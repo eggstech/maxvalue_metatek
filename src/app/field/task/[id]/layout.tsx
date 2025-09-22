@@ -12,7 +12,7 @@ export default function FieldTaskDetailLayout({
         <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full">
              <div className="flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
-                    <Link href="/field">
+                    <Link href="/field/tasks">
                         <ChevronLeft className="mr-2 h-4 w-4" />
                         Back to Task List
                     </Link>

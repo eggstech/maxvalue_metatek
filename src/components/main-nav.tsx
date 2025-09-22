@@ -18,8 +18,8 @@ import Link from 'next/link';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/tasks', label: 'Tasks', icon: ClipboardList },
-  { href: '/tasks/recurring', label: 'Recurring', icon: Repeat },
+  { href: '/tasks', label: 'All Tasks', icon: ClipboardList },
+  { href: '/tasks/recurring', label: 'Schedules', icon: Repeat },
   { href: '/review', label: 'Review', icon: Eye },
   { href: '/reports', label: 'Reports', icon: BarChart3 },
   { href: '/settings', label: 'Settings', icon: Settings },
@@ -30,7 +30,7 @@ export function MainNav() {
 
   const isActive = (href: string) => {
     if (href === '/tasks') {
-      return pathname === '/tasks' || pathname.startsWith('/tasks/') && !pathname.startsWith('/tasks/recurring');
+      return pathname === '/tasks' || (pathname.startsWith('/tasks/') && !pathname.startsWith('/tasks/recurring'));
     }
     return pathname === href;
   }

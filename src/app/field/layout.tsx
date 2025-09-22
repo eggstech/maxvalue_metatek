@@ -3,6 +3,9 @@
 
 import { UserNav } from "@/components/user-nav";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 
 export default function FieldLayout({
@@ -12,8 +15,8 @@ export default function FieldLayout({
   }>) {
     const router = useRouter();
     return (
-        <div className="flex min-h-screen w-full flex-col">
-            <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+            <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/field')}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +42,7 @@ export default function FieldLayout({
                 </div>
                 <UserNav />
             </header>
-            <main className="flex flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+            <main className="flex flex-1 flex-col p-4 md:p-8">
                 {children}
             </main>
         </div>

@@ -206,7 +206,7 @@ export const initialSubmissions: Submission[] = [
         date: '2024-07-22', 
         status: 'Rejected',
         submissionTime: '2 days ago',
-        feedback: 'The price for SKU-101 is incorrect. Please verify against the master price list and resubmit.',
+        feedback: 'The price for SKU-101 is incorrect in your submission. Please verify against the master price list and resubmit.',
         results: [{ requirementId: 0, type: 'data-entry', value: '19.99'}]
     }
 ];

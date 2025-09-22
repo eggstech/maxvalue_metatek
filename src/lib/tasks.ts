@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 
 export type Requirement = {
@@ -187,7 +188,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-22',
     status: 'Rejected',
     type: 'Data Entry',
-    description: 'Verify prices for 5 specific SKUs. The previous submission had errors.',
+    description: 'Verify prices for 5 specific SKUs.',
     requirements: [
         {
             type: 'data-entry',

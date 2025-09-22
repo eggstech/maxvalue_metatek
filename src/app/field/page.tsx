@@ -2,7 +2,7 @@
 'use client';
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { initialTasks, Task } from "@/lib/tasks";
 import { ArrowRight, Calendar, CheckCircle2, Circle, Clock } from "lucide-react";
 import Link from "next/link";

@@ -18,8 +18,8 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import * as React from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Submission, initialSubmissions } from '@/lib/submissions';
-import { getTaskById, Task } from '@/lib/tasks';
+import { Submission, initialSubmissions, SubmissionResult } from '@/lib/submissions';
+import { getTaskById, Task, Requirement } from '@/lib/tasks';
 import { Skeleton } from '@/components/ui/skeleton';
 import ReactMarkdown from 'react-markdown';
 import { Label } from '@/components/ui/label';
@@ -39,9 +39,9 @@ const RequirementIcon = ({type}: {type: string}) => {
 
 export default function ReviewPage() {
   const { toast } = useToast();
-  const [reviews, setReviews] = React.useState<Submission[]>(initialSubmissions);
+  const [reviews, setReviews] = React.useState<Submission[]>(initialSubmissions.filter(s => s.status === 'Pending Review'));
   const [selectedReviewId, setSelectedReviewId] = React.useState<string | null>(
-    initialSubmissions.length > 0 ? initialSubmissions[0].id : null
+    reviews.length > 0 ? reviews[0].id : null
   );
   const [feedback, setFeedback] = React.useState('');
 
@@ -73,6 +73,9 @@ export default function ReviewPage() {
     });
   };
 
+  const findResultForRequirement = (reqIndex: number): SubmissionResult | undefined => {
+    return selectedReview?.results.find(res => res.requirementId === reqIndex);
+  }
 
   return (
     <div className="grid h-full flex-1 gap-6 md:grid-cols-[300px_1fr]">
@@ -118,84 +121,83 @@ export default function ReviewPage() {
             <div className='space-y-6'>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Review Submission</CardTitle>
+                        <CardTitle className="text-2xl">{selectedReview.taskName}</CardTitle>
                         <CardDescription>
-                        Task: <span className="font-medium text-foreground">{selectedReview.taskName}</span> from <span className="font-medium text-foreground">{selectedReview.store}</span>
+                          Submitted by <span className="font-medium text-foreground">{selectedReview.submittedBy}</span> from <span className="font-medium text-foreground">{selectedReview.store}</span>
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 gap-6">
-                            {/* Left Column: Original Request */}
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">Original Request</h3>
-                                <Card className="bg-muted/30">
-                                    <CardContent className="p-4 space-y-4">
-                                        <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground">
-                                            <ReactMarkdown>{originalTask.description || "No description provided."}</ReactMarkdown>
-                                        </div>
-                                        <Separator />
-                                        <h4 className="font-semibold text-sm">Requirements:</h4>
-                                        <div className="space-y-3">
-                                            {originalTask.requirements?.map((req) => (
-                                                <div key={req.label} className="flex items-start gap-3 text-sm">
-                                                    <RequirementIcon type={req.type} />
-                                                    <div className="flex-1">
-                                                        <p className='font-medium text-foreground'>{req.label}</p>
-                                                        {req.type === 'image' && <p className="text-xs text-muted-foreground">Requires {req.min}-{req.max} image(s)</p>}
-                                                        {req.type === 'checklist' && req.checklistItems && (
-                                                            <ul className='mt-1 space-y-1 text-xs text-muted-foreground list-disc list-inside'>
-                                                                {req.checklistItems.map(item => <li key={item.text}>{item.text}</li>)}
-                                                            </ul>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Right Column: Submitted Result */}
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">Submitted Result</h3>
-                                <div className="space-y-4">
-                                    {selectedReview.results.map(result => (
-                                        <div key={result.requirementId}>
-                                            {result.type === 'image' && result.imageUrl && (
-                                                <div className="overflow-hidden rounded-lg border">
-                                                    <Image
-                                                    src={result.imageUrl}
-                                                    alt="Submission Image"
-                                                    width={600}
-                                                    height={400}
-                                                    className="aspect-[3/2] w-full object-cover"
-                                                    data-ai-hint={result.imageHint}
-                                                    />
-                                                </div>
-
-                                            )}
-                                            {result.type === 'checklist' && result.checklist && (
-                                                <ul className="space-y-3 rounded-md border p-4">
-                                                    {result.checklist.map(item => (
-                                                        <li key={item.id} className="flex items-center gap-3">
-                                                            {item.pass ? (
-                                                                <Check className="h-5 w-5 text-green-500" />
-                                                            ) : (
-                                                                <X className="h-5 w-5 text-red-500" />
-                                                            )}
-                                                            <span>{item.text}</span>
-                                                            {!item.pass && <Badge variant="destructive">Failed</Badge>}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                     <CardContent className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground">
+                        <ReactMarkdown>{originalTask.description || "No description provided for this task."}</ReactMarkdown>
                     </CardContent>
                 </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Submission Review</CardTitle>
+                        <CardDescription>Review the submitted results against the original requirements.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        {originalTask.requirements?.map((req, index) => {
+                             const result = findResultForRequirement(index);
+                             return (
+                                <div key={index} className="p-4 border rounded-lg bg-muted/30">
+                                    <div className="flex items-start gap-3">
+                                        <RequirementIcon type={req.type} />
+                                        <div className="flex-1 space-y-3">
+                                            <Label className='text-base font-semibold'>{req.label}</Label>
+                                            
+                                            {/* Render submitted result */}
+                                            {result ? (
+                                                <div className='rounded-md bg-background/50 p-4 border border-dashed'>
+                                                    {result.type === 'image' && result.value && (
+                                                        <div className="overflow-hidden rounded-lg border w-fit">
+                                                            <Image
+                                                                src={result.value}
+                                                                alt={`Submission for ${req.label}`}
+                                                                width={400}
+                                                                height={300}
+                                                                className="object-cover"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                     {result.type === 'checklist' && result.value && (
+                                                        <ul className="space-y-3">
+                                                            {result.value.map((item: any, itemIdx: number) => (
+                                                                <li key={itemIdx} className="flex items-center gap-3">
+                                                                    {item.pass ? (
+                                                                        <Check className="h-5 w-5 text-green-500" />
+                                                                    ) : (
+                                                                        <X className="h-5 w-5 text-red-500" />
+                                                                    )}
+                                                                    <span>{item.text}</span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                    {result.type === 'data-entry' && result.value && (
+                                                        <p className="text-sm font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded-md w-fit">{result.value}</p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className='rounded-md bg-background/50 p-4 border-dashed border text-muted-foreground text-sm'>
+                                                    No submission for this requirement.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                             )
+                        })}
+                         {(!originalTask.requirements || originalTask.requirements.length === 0) && (
+                            <div className="text-center text-muted-foreground p-4">
+                                <Info className="mx-auto h-8 w-8" />
+                                <p className="mt-2 text-sm">This task did not have specific submission requirements.</p>
+                                <p className="text-xs">The user marked it as "Done".</p>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
                 <Card>
                     <CardHeader>
                         <CardTitle>Feedback & Action</CardTitle>
@@ -231,11 +233,11 @@ export default function ReviewPage() {
                             </div>
                         </>
                     ) : (
-                        <>
-                            <Info className="mx-auto h-12 w-12" />
-                            <p className="mt-4 font-semibold">No Submission Selected</p>
-                            <p className="text-sm">Please select a submission from the list on the left.</p>
-                        </>
+                        <div className="text-center text-muted-foreground p-8">
+                            <CircleCheck className="mx-auto h-12 w-12 text-green-500" />
+                            <p className="mt-4 font-semibold">All caught up!</p>
+                            <p className="text-sm">There are no more pending reviews.</p>
+                        </div>
                     )}
                 </CardContent>
             </Card>
@@ -244,3 +246,5 @@ export default function ReviewPage() {
     </div>
   );
 }
+
+    

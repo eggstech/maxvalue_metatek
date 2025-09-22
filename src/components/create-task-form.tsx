@@ -178,9 +178,9 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
             control={form.control}
             name="dueDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Due Date</FormLabel>
-                <Popover>
+                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button

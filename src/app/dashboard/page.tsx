@@ -34,6 +34,7 @@ import {
   ClipboardList,
   Clock,
 } from 'lucide-react';
+import Link from 'next/link';
 
 const taskActivityData = [
   { date: 'Mon', created: 30, completed: 22 },
@@ -55,17 +56,18 @@ const completionRateData = [
 ];
 
 const recentSubmissions = [
-  { id: 'TSK-001', store: 'Store A', task: 'Display Check', status: 'Completed' },
-  { id: 'TSK-002', store: 'Store C', task: 'Stock Count', status: 'Pending Review' },
-  { id: 'TSK-003', store: 'Store B', task: 'Cleanliness Audit', status: 'Completed' },
-  { id: 'TSK-004', store: 'Store D', task: 'POSM Setup', status: 'Overdue' },
-  { id: 'TSK-005', store: 'Store A', task: 'Price Verification', status: 'Pending Review' },
+  { id: 'SUB-001', taskId: 'TSK-003', store: 'Store A', task: 'New Campaign POSM Setup', status: 'Pending Review' },
+  { id: 'SUB-002', taskId: 'TSK-001', store: 'Store C', task: 'Weekly Display Check', status: 'Pending Review' },
+  { id: 'SUB-005', taskId: 'TSK-009', store: 'Store B', task: 'Monthly Sales Display', status: 'Approved' },
+  { id: 'SUB-006', taskId: 'TSK-007', store: 'Store D', task: 'Cleanliness Audit Photo', status: 'Overdue' },
+  { id: 'SUB-003', taskId: 'TSK-006', store: 'Store A', task: 'Stock Count Verification', status: 'Pending Review' },
 ];
 
 const StatusBadge = ({ status }: { status: string }) => {
   switch (status) {
+    case 'Approved':
     case 'Completed':
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700">Completed</Badge>;
+      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700">Approved</Badge>;
     case 'Pending Review':
       return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80 dark:bg-yellow-900/50 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700">Pending Review</Badge>;
     case 'Overdue':
@@ -193,9 +195,17 @@ export default function DashboardPage() {
             <TableBody>
               {recentSubmissions.map((submission) => (
                 <TableRow key={submission.id}>
-                  <TableCell className="font-medium">{submission.id}</TableCell>
+                  <TableCell className="font-medium">
+                     <Link href={`/submissions/${submission.id}`} className="text-primary hover:underline">
+                        {submission.id}
+                     </Link>
+                  </TableCell>
                   <TableCell>{submission.store}</TableCell>
-                  <TableCell>{submission.task}</TableCell>
+                  <TableCell>
+                    <Link href={`/tasks/${submission.taskId}`} className="hover:underline">
+                        {submission.task}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     <StatusBadge status={submission.status} />
                   </TableCell>

@@ -76,7 +76,7 @@ export const initialTasks: Task[] = [
     name: 'New Campaign POSM Setup',
     store: 'Stores Group A',
     dueDate: '2024-07-20',
-    status: 'Completed',
+    status: 'Pending Review',
     type: 'Image',
     description: 'Set up the Point of Sale Materials for the new "Summer Sale" campaign. Submit a photo of the final setup for review.',
     requirements: [
@@ -131,9 +131,9 @@ export const initialTasks: Task[] = [
    {
     id: 'TSK-006',
     name: 'Stock Count Verification',
-    store: 'All Stores',
+    store: 'Store B',
     dueDate: '2024-08-15',
-    status: 'Pending Review',
+    status: 'Completed',
     type: 'Mixed',
     description: 'Verify the stock count from the latest delivery and check for discrepancies.',
     requirements: [
@@ -196,6 +196,43 @@ export const initialTasks: Task[] = [
         },
     ]
   },
+  {
+    id: 'TSK-009',
+    name: 'Monthly Sales Display',
+    store: 'Store B',
+    dueDate: '2024-07-21',
+    status: 'Completed',
+    type: 'Image',
+    description: 'Setup the new monthly sales promotion display near the entrance.',
+    requirements: [
+      {
+        type: 'image',
+        label: 'Photo of the sales display',
+        min: 1,
+        max: 1
+      }
+    ],
+    isRecurring: true,
+  },
+  {
+    id: 'TSK-010',
+    name: 'Safety Compliance Check',
+    store: 'Store E',
+    dueDate: '2024-07-23',
+    status: 'Completed',
+    type: 'Checklist',
+    description: 'Perform weekly safety check.',
+    requirements: [
+      {
+        type: 'checklist',
+        label: 'Safety Checklist',
+        checklistItems: [
+          { text: 'Fire extinguisher is accessible.' },
+          { text: 'Emergency exits are clear.' },
+        ]
+      }
+    ],
+  }
 ];
 
 export function getTaskById(id: string): Task | undefined {

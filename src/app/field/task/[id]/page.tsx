@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getTaskById } from '@/lib/tasks';
 import { Camera, CheckSquare, Image as ImageIcon, Send, TextCursorInput, ListChecks, Info } from 'lucide-react';
 import Image from 'next/image';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, useParams } from 'next/navigation';
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -27,7 +27,9 @@ const RequirementIcon = ({type}: {type: string}) => {
     }
 }
 
-export default function FieldSubmissionPage({ params: { id } }: { params: { id: string } }) {
+export default function FieldSubmissionPage() {
+  const params = useParams();
+  const id = params.id as string;
   const task = getTaskById(id);
   const router = useRouter();
   const { toast } = useToast();

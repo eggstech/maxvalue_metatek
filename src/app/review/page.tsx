@@ -149,15 +149,19 @@ export default function ReviewPage() {
                                             {/* Render submitted result */}
                                             {result ? (
                                                 <div className='rounded-md bg-background/50 p-4 border border-dashed'>
-                                                    {result.type === 'image' && result.value && (
-                                                        <div className="overflow-hidden rounded-lg border w-fit">
-                                                            <Image
-                                                                src={result.value}
-                                                                alt={`Submission for ${req.label}`}
-                                                                width={400}
-                                                                height={300}
-                                                                className="object-cover"
-                                                            />
+                                                    {result.type === 'image' && result.value && Array.isArray(result.value) && (
+                                                        <div className='flex flex-wrap gap-4'>
+                                                            {result.value.map((imgSrc, imgIndex) => (
+                                                                <div key={imgIndex} className="overflow-hidden rounded-lg border w-fit">
+                                                                    <Image
+                                                                        src={imgSrc}
+                                                                        alt={`Submission for ${req.label} #${imgIndex + 1}`}
+                                                                        width={300}
+                                                                        height={225}
+                                                                        className="object-cover"
+                                                                    />
+                                                                </div>
+                                                            ))}
                                                         </div>
                                                     )}
                                                      {result.type === 'checklist' && result.value && (
@@ -174,8 +178,15 @@ export default function ReviewPage() {
                                                             ))}
                                                         </ul>
                                                     )}
-                                                    {result.type === 'data-entry' && result.value && (
+                                                    {result.type === 'data-entry' && result.value && typeof result.value === 'string' && (
                                                         <p className="text-sm font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded-md w-fit">{result.value}</p>
+                                                    )}
+                                                    {result.type === 'data-entry' && result.value && Array.isArray(result.value) && (
+                                                        <ul className='space-y-2 list-disc list-inside'>
+                                                            {result.value.map((val, valIdx) => (
+                                                                <li key={valIdx}>{val}</li>
+                                                            ))}
+                                                        </ul>
                                                     )}
                                                 </div>
                                             ) : (

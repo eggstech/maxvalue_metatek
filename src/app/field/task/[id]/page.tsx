@@ -27,8 +27,8 @@ const RequirementIcon = ({type}: {type: string}) => {
     }
 }
 
-export default function FieldSubmissionPage({ params }: { params: { id: string } }) {
-  const task = getTaskById(params.id);
+export default function FieldSubmissionPage({ params: { id } }: { params: { id: string } }) {
+  const task = getTaskById(id);
   const router = useRouter();
   const { toast } = useToast();
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
@@ -62,133 +62,108 @@ export default function FieldSubmissionPage({ params }: { params: { id: string }
   const isCompleted = task.status === 'Completed';
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-      {/* Left Column: Task Details */}
-      <div className="lg:col-span-2 space-y-6">
-        <Card className="sticky top-20">
+    <form onSubmit={handleSubmit} className="space-y-6">
+        <Card>
             <CardHeader>
                 <CardTitle className="text-2xl">{task.name}</CardTitle>
                 <CardDescription>
-                    Please complete the requirements and submit your work.
+                    Please complete the requirements below and submit your work.
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground mb-6">
+                 <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground">
                     <ReactMarkdown>{task.description || "No description provided for this task."}</ReactMarkdown>
-                </div>
-                <Separator />
-                <h3 className="text-md font-semibold my-4">Requirements</h3>
-                <div className="space-y-4">
-                    {task.requirements?.map((req, index) => (
-                         <div key={index} className="flex items-start gap-3 text-sm p-3 border rounded-lg bg-muted/30">
-                            <RequirementIcon type={req.type} />
-                            <div className="flex-1">
-                                <p className='font-medium text-foreground'>{req.label}</p>
-                                {req.type === 'image' && <p className="text-xs text-muted-foreground">Requires {req.min}-{req.max} image(s)</p>}
-                                {req.type === 'checklist' && req.checklistItems && (
-                                    <ul className='mt-1 space-y-1 text-xs text-muted-foreground list-disc list-inside'>
-                                        {req.checklistItems.map((item, i) => <li key={i}>{item.text}</li>)}
-                                    </ul>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                    {(!task.requirements || task.requirements.length === 0) && (
-                        <p className="text-sm text-muted-foreground">No specific requirements for this task.</p>
-                    )}
                 </div>
             </CardContent>
         </Card>
-      </div>
 
-      {/* Right Column: Submission Form */}
-      <div className="lg:col-span-3">
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Your Submission</CardTitle>
-                    {isCompleted && <CardDescription>This task has already been completed. Viewing in read-only mode.</CardDescription>}
-                </CardHeader>
-                <CardContent className="space-y-8">
-                    {task.requirements && task.requirements.length > 0 ? (
-                        task.requirements.map((req, index) => (
-                            <div key={index} className="space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <RequirementIcon type={req.type} />
-                                    <Label className='text-base font-semibold'>{req.label}</Label>
-                                </div>
-                                
-                                <fieldset disabled={isCompleted} className="pl-8 space-y-4">
-                                    {req.type === 'image' && (
-                                        <div>
-                                            <Input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
-                                            <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
-                                                <Camera className="mr-2 h-4 w-4" />
-                                                Take Photo
-                                            </Button>
-                                            {imagePreview && (
-                                                <div className="mt-4 overflow-hidden rounded-lg border w-fit">
-                                                    <Image src={imagePreview} alt="Image preview" width={300} height={200} className="object-cover" />
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {req.type === 'data-entry' && (
-                                        <div className='space-y-3'>
-                                            {req.entryType === 'text' && <Textarea placeholder="Enter value..."/>}
-                                            {req.entryType === 'single' && req.options && (
-                                                <RadioGroup>
-                                                    {req.options.map((option, optionIndex) => (
-                                                        <div key={optionIndex} className="flex items-center space-x-2">
-                                                            <RadioGroupItem value={option.text} id={`${req.label}-option-${optionIndex}`} />
-                                                            <Label htmlFor={`${req.label}-option-${optionIndex}`}>{option.text}</Label>
-                                                        </div>
-                                                    ))}
-                                                </RadioGroup>
-                                            )}
-                                            {req.entryType === 'multiple' && req.options && (
-                                                <div className="space-y-2">
-                                                    {req.options.map((option, optionIndex) => (
-                                                        <div key={optionIndex} className="flex items-center space-x-2">
-                                                            <Checkbox id={`${req.label}-option-${optionIndex}`} />
-                                                            <Label htmlFor={`${req.label}-option-${optionIndex}`}>{option.text}</Label>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {req.type === 'checklist' && req.checklistItems && (
-                                        <div className='space-y-3'>
-                                            {req.checklistItems.map((item, itemIndex) => (
-                                                <div key={itemIndex} className="flex items-center gap-3">
-                                                    <Checkbox id={`checklist-${index}-${itemIndex}`} />
-                                                    <Label htmlFor={`checklist-${index}-${itemIndex}`} className='font-normal'>{item.text}</Label>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </fieldset>
-                                {index < task.requirements.length - 1 && <Separator className="mt-8"/>}
+        <Card>
+            <CardHeader>
+                <CardTitle>Submission Details</CardTitle>
+                {isCompleted ? (
+                     <CardDescription>This task has already been completed. Viewing in read-only mode.</CardDescription>
+                ) : (
+                    <CardDescription>Fulfill each requirement listed below.</CardDescription>
+                )}
+            </CardHeader>
+            <CardContent className="space-y-8">
+                 {task.requirements && task.requirements.length > 0 ? (
+                    task.requirements.map((req, index) => (
+                        <div key={index} className="space-y-4 p-4 border rounded-lg bg-muted/30">
+                            <div className="flex items-center gap-3">
+                                <RequirementIcon type={req.type} />
+                                <Label className='text-base font-semibold'>{req.label}</Label>
                             </div>
-                        ))
-                    ) : (
-                         <p className="text-sm text-muted-foreground">No submission required. Click submit to mark as done.</p>
-                    )}
-                </CardContent>
-                <CardFooter>
-                     {!isCompleted && (
-                        <Button type="submit" size="lg" className="w-full md:w-auto">
-                            <Send className="mr-2 h-4 w-4" />
-                            Submit Task
-                        </Button>
-                    )}
-                </CardFooter>
-            </Card>
-        </form>
-      </div>
-    </div>
+                            
+                            <fieldset disabled={isCompleted} className="space-y-4">
+                                {req.type === 'image' && (
+                                    <div>
+                                        <Input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
+                                        <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                                            <Camera className="mr-2 h-4 w-4" />
+                                            Take Photo
+                                        </Button>
+                                        {imagePreview && (
+                                            <div className="mt-4 overflow-hidden rounded-lg border w-fit">
+                                                <Image src={imagePreview} alt="Image preview" width={300} height={200} className="object-cover" />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {req.type === 'data-entry' && (
+                                    <div className='space-y-3'>
+                                        {req.entryType === 'text' && <Textarea placeholder="Enter value..."/>}
+                                        {req.entryType === 'single' && req.options && (
+                                            <RadioGroup>
+                                                {req.options.map((option, optionIndex) => (
+                                                    <div key={optionIndex} className="flex items-center space-x-2">
+                                                        <RadioGroupItem value={option.text} id={`${req.label}-option-${optionIndex}`} />
+                                                        <Label htmlFor={`${req.label}-option-${optionIndex}`}>{option.text}</Label>
+                                                    </div>
+                                                ))}
+                                            </RadioGroup>
+                                        )}
+                                        {req.entryType === 'multiple' && req.options && (
+                                            <div className="space-y-2">
+                                                {req.options.map((option, optionIndex) => (
+                                                    <div key={optionIndex} className="flex items-center space-x-2">
+                                                        <Checkbox id={`${req.label}-option-${optionIndex}`} />
+                                                        <Label htmlFor={`${req.label}-option-${optionIndex}`}>{option.text}</Label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {req.type === 'checklist' && req.checklistItems && (
+                                    <div className='space-y-3'>
+                                        {req.checklistItems.map((item, itemIndex) => (
+                                            <div key={itemIndex} className="flex items-center gap-3">
+                                                <Checkbox id={`checklist-${index}-${itemIndex}`} />
+                                                <Label htmlFor={`checklist-${index}-${itemIndex}`} className='font-normal'>{item.text}</Label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </fieldset>
+                        </div>
+                    ))
+                ) : (
+                     <p className="text-sm text-muted-foreground text-center p-4">No specific submission required. Click submit to mark as done.</p>
+                )}
+            </CardContent>
+        </Card>
+
+        {!isCompleted && (
+            <div className='flex justify-end'>
+                <Button type="submit" size="lg">
+                    <Send className="mr-2 h-4 w-4" />
+                    Submit Task
+                </Button>
+            </div>
+        )}
+    </form>
   );
 }

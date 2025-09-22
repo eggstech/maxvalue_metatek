@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
+import { MoreHorizontal, ArrowUpDown, Repeat } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -101,6 +101,13 @@ export const columns: ColumnDef<Task>[] = [
     header: 'Status',
     cell: ({ row }) => {
         return <StatusBadge status={row.original.status} />
+    }
+  },
+  {
+    accessorKey: 'isRecurring',
+    header: 'Recurring',
+    cell: ({ row }) => {
+        return row.original.isRecurring ? <Repeat className="h-4 w-4 text-muted-foreground" /> : null;
     }
   },
   {

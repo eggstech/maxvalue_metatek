@@ -21,8 +21,7 @@ export default function LoginPage() {
     };
 
     const handleFieldLogin = () => {
-        // We will build the /field route in the next step
-        alert('Field user login coming soon!');
+        router.push('/field');
     };
 
     return (

@@ -24,8 +24,9 @@ export default function RootLayoutClient({
 }) {
   const pathname = usePathname();
   const isLoginPage = pathname === '/';
+  const isFieldPage = pathname.startsWith('/field');
 
-  if (isLoginPage) {
+  if (isLoginPage || isFieldPage) {
     return (
       <>
         {children}

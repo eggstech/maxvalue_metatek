@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -16,13 +17,62 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { PlusCircle } from 'lucide-react';
+import { CircleIcon, PlusCircle, CheckCircle, Clock, XCircle, Hourglass, FileText, Component } from 'lucide-react';
 import { CreateTaskForm } from '@/components/create-task-form';
 import * as React from 'react';
 import { columns } from './columns';
 import { DataTable } from '@/components/data-table';
 import { Task, initialTasks, addTask as addTaskToState } from '@/lib/tasks';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DataTableFacetedFilter } from '@/components/data-table-faceted-filter';
+import { Table } from '@tanstack/react-table';
+
+const statuses = [
+  {
+    value: 'Active',
+    label: 'Active',
+    icon: Clock,
+  },
+  {
+    value: 'Completed',
+    label: 'Completed',
+    icon: CheckCircle,
+  },
+  {
+    value: 'Draft',
+    label: 'Draft',
+    icon: FileText,
+  },
+  {
+    value: 'Pending Review',
+    label: 'Pending Review',
+    icon: Hourglass,
+  },
+  {
+    value: 'Overdue',
+    label: 'Overdue',
+    icon: XCircle,
+  },
+  {
+    value: 'Rejected',
+    label: 'Rejected',
+    icon: Component,
+  },
+]
+
+function TaskTableToolbar({ table }: { table: Table<Task>}) {
+  return (
+    <>
+    {table.getColumn("status") && (
+      <DataTableFacetedFilter
+        column={table.getColumn("status")}
+        title="Status"
+        options={statuses}
+      />
+    )}
+    </>
+  )
+}
 
 export default function TasksPage() {
   const [tasks, setTasks] = React.useState<Task[]>(initialTasks);
@@ -73,7 +123,7 @@ export default function TasksPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <DataTable columns={columns} data={tasks} />
+            <DataTable columns={columns} data={tasks} toolbar={TaskTableToolbar}/>
           </CardContent>
         </Card>
       </TabsContent>
@@ -86,7 +136,7 @@ export default function TasksPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <DataTable columns={columns} data={recurringTasks} />
+            <DataTable columns={columns} data={recurringTasks} toolbar={TaskTableToolbar}/>
           </CardContent>
         </Card>
       </TabsContent>

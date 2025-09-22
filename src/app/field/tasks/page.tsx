@@ -4,12 +4,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { initialTasks, Task } from "@/lib/tasks";
-import { ArrowRight, Calendar, CheckCircle2, Circle, Clock, MessageSquareWarning, Hourglass } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle2, Circle, Clock, MessageSquareWarning, Hourglass, TableIcon, LayoutDashboard, FileText } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from "@/components/data-table";
 import { columns } from "../columns";
+import { DataTableFacetedFilter } from "@/components/data-table-faceted-filter";
+import { Table } from "@tanstack/react-table";
 
 const getStatusInfo = (status: Task['status']) => {
     switch (status) {
@@ -33,7 +35,6 @@ const getActionText = (status: Task['status']) => {
         case 'Rejected':
             return 'Resubmit Task';
         case 'Pending Review':
-            return 'View Submission';
         case 'Completed':
             return 'View Submission';
         default:
@@ -52,6 +53,48 @@ const statusOrder: Record<Task['status'], number> = {
     'Draft': 6, // Should not be in field view, but good to have
 };
 
+const statuses = [
+    {
+      value: 'Active',
+      label: 'To Do',
+      icon: Clock,
+    },
+    {
+      value: 'Completed',
+      label: 'Completed',
+      icon: CheckCircle2,
+    },
+    {
+      value: 'Pending Review',
+      label: 'Pending Review',
+      icon: Hourglass,
+    },
+    {
+      value: 'Overdue',
+      label: 'Overdue',
+      icon: Clock,
+    },
+    {
+      value: 'Rejected',
+      label: 'Rejected',
+      icon: MessageSquareWarning,
+    },
+  ]
+
+  function TaskTableToolbar({ table }: { table: Table<Task>}) {
+    return (
+      <>
+      {table.getColumn("status") && (
+        <DataTableFacetedFilter
+          column={table.getColumn("status")}
+          title="Status"
+          options={statuses}
+        />
+      )}
+      </>
+    )
+  }
+
 export default function FieldTaskPage() {
     const [tasks] = React.useState(() => {
         return [...fieldTasks].sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
@@ -69,8 +112,8 @@ export default function FieldTaskPage() {
             
             <Tabs defaultValue="board">
                 <TabsList className="grid w-full grid-cols-2 md:w-[400px] mx-auto">
-                    <TabsTrigger value="board">Board View</TabsTrigger>
-                    <TabsTrigger value="table">Table View</TabsTrigger>
+                    <TabsTrigger value="board"><LayoutDashboard className="mr-2 h-4 w-4"/>Board View</TabsTrigger>
+                    <TabsTrigger value="table"><TableIcon className="mr-2 h-4 w-4"/>Table View</TabsTrigger>
                 </TabsList>
                 <TabsContent value="board" className="mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
@@ -195,7 +238,7 @@ export default function FieldTaskPage() {
                 <TabsContent value="table" className="mt-6">
                     <Card>
                         <CardContent className="pt-6">
-                            <DataTable columns={columns} data={tasks} />
+                            <DataTable columns={columns} data={tasks} toolbar={TaskTableToolbar}/>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -203,3 +246,4 @@ export default function FieldTaskPage() {
         </div>
     );
 }
+

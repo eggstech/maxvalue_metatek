@@ -28,8 +28,7 @@ const RequirementIcon = ({type}: {type: string}) => {
 }
 
 export default function FieldSubmissionPage({ params }: { params: { id: string } }) {
-  const { id } = params;
-  const task = getTaskById(id);
+  const task = getTaskById(params.id);
   const router = useRouter();
   const { toast } = useToast();
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);

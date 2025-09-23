@@ -1,4 +1,5 @@
 
+
 import { Requirement } from "./tasks";
 
 export type SubmissionResult = {
@@ -43,15 +44,15 @@ export const initialSubmissions: Submission[] = [
             {
                 requirementId: 0,
                 type: 'image',
-                value: 'https://picsum.photos/seed/101/800/600',
+                value: ['https://picsum.photos/seed/101/800/600', 'https://picsum.photos/seed/111/800/600'],
             },
             {
                 requirementId: 1,
                 type: 'checklist',
                 value: [
-                    { id: 1, text: 'Main banner is visible from entrance.', pass: true },
-                    { id: 2, text: 'Wobblers are attached to featured products.', pass: true },
-                    { id: 3, text: 'Brochures are available at the counter.', pass: false },
+                    { text: 'Main banner is visible from entrance.', pass: true },
+                    { text: 'Wobblers are attached to featured products.', pass: true },
+                    { text: 'Brochures are available at the counter.', pass: false },
                 ],
             }
         ],
@@ -207,7 +208,48 @@ export const initialSubmissions: Submission[] = [
         status: 'Rejected',
         submissionTime: '2 days ago',
         feedback: 'The price for SKU-101 is incorrect in your submission. Please verify against the master price list and resubmit.',
-        results: [{ requirementId: 0, type: 'data-entry', value: '19.99'}]
+        results: [{ requirementId: 0, type: 'data-entry', value: '25.99'}]
+    },
+    {
+        id: 'SUB-009',
+        taskId: 'TSK-002',
+        taskName: 'End-of-Month Stock Count',
+        store: 'Store A',
+        submittedBy: 'User 2',
+        date: '2024-07-26',
+        status: 'Pending Review',
+        submissionTime: '15 minutes ago',
+        results: [
+            { requirementId: 0, type: 'data-entry', value: '152' },
+            { requirementId: 1, type: 'data-entry', value: '348' }
+        ]
+    },
+    {
+        id: 'SUB-010',
+        taskId: 'TSK-011',
+        taskName: 'In-Store Customer Survey',
+        store: 'Store A',
+        submittedBy: 'User 2',
+        date: '2024-07-26',
+        status: 'Pending Review',
+        submissionTime: '10 minutes ago',
+        results: [
+            {
+                requirementId: 0,
+                type: 'data-entry',
+                value: 'Good'
+            },
+            {
+                requirementId: 1,
+                type: 'data-entry',
+                value: ['Store Cleanliness', 'Staff Friendliness']
+            },
+            {
+                requirementId: 2,
+                type: 'data-entry',
+                value: 'The music was a bit too loud, but the staff were very helpful.'
+            }
+        ]
     }
 ];
 

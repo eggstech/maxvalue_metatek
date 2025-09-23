@@ -1,4 +1,5 @@
 
+
 import { format } from "date-fns";
 
 export type Requirement = {
@@ -56,7 +57,7 @@ export const initialTasks: Task[] = [
     name: 'End-of-Month Stock Count',
     store: 'All Stores',
     dueDate: '2024-07-31',
-    status: 'Active',
+    status: 'Pending Review',
     type: 'Data Entry',
     description: 'Perform a full stock count of all items in the warehouse and on the shelves. Submit the final counts via the data entry form.',
     requirements: [
@@ -233,6 +234,44 @@ export const initialTasks: Task[] = [
         ]
       }
     ],
+  },
+  {
+    id: 'TSK-011',
+    name: 'In-Store Customer Survey',
+    store: 'Store A',
+    dueDate: '2024-08-10',
+    status: 'Pending Review',
+    type: 'Data Entry',
+    description: 'Gather customer feedback using the survey questions below.',
+    requirements: [
+        {
+            type: 'data-entry',
+            label: 'How would you rate your overall experience?',
+            entryType: 'single',
+            options: [
+                { text: 'Excellent' },
+                { text: 'Good' },
+                { text: 'Average' },
+                { text: 'Poor' },
+            ]
+        },
+        {
+            type: 'data-entry',
+            label: 'What did you like about our store? (Select all that apply)',
+            entryType: 'multiple',
+            options: [
+                { text: 'Product Selection' },
+                { text: 'Store Cleanliness' },
+                { text: 'Staff Friendliness' },
+                { text: 'Prices & Promotions' },
+            ]
+        },
+        {
+            type: 'data-entry',
+            label: 'Any other comments or suggestions?',
+            entryType: 'text'
+        }
+    ]
   }
 ];
 

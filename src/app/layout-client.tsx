@@ -16,6 +16,7 @@ import { UserNav } from '@/components/user-nav';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { NotificationNav } from '@/components/notification-nav';
+import * as React from 'react';
 
 export default function RootLayoutClient({
   children,
@@ -23,8 +24,15 @@ export default function RootLayoutClient({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const isLoginPage = pathname === '/';
   const isFieldPage = pathname.startsWith('/field');
+  const isReviewPage = pathname === '/review';
 
   if (isLoginPage || isFieldPage) {
     return (
@@ -93,16 +101,20 @@ export default function RootLayoutClient({
         <header className="flex h-14 items-center gap-4 border-b bg-background/95 backdrop-blur-sm px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
           <SidebarTrigger className="md:hidden" />
           <div className="w-full flex-1">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search tasks..."
-                  className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-                />
-              </div>
-            </form>
+            {isClient ? (
+              !isReviewPage && (
+                <form>
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="search"
+                      placeholder="Search tasks..."
+                      className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+                    />
+                  </div>
+                </form>
+              )
+            ) : null}
           </div>
           <div className="flex items-center gap-2">
             <NotificationNav />

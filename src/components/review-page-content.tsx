@@ -22,6 +22,7 @@ import {
   ImageIcon,
   ListChecks,
   FileText,
+  File,
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
@@ -186,24 +187,32 @@ export function ReviewPageContent({
         )}
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Submission Review</CardTitle>
-          <CardDescription>
-            Review the submitted results against the original requirements.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-            {isVisualStandardTask && pdfRequirement?.pdfUrl && imageResult?.value ? (
+      {isVisualStandardTask && pdfRequirement?.pdfUrl && imageResult?.value ? (
+        <Card>
+            <CardHeader>
+                <CardTitle>Submission Review</CardTitle>
+                <CardDescription>
+                    Review the submitted photo against the visual standard.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
                 <VisualStandardReview pdfUrl={pdfRequirement.pdfUrl} imageIds={imageResult.value} />
-            ) : (
+            </CardContent>
+        </Card>
+      ) : (
+        <Card>
+            <CardHeader>
+            <CardTitle>Submission Review</CardTitle>
+            <CardDescription>
+                Review the submitted results against the original requirements.
+            </CardDescription>
+            </CardHeader>
+            <CardContent>
                 <div className="space-y-6">
                     {originalTask?.requirements && originalTask.requirements.length > 0 ? (
                         originalTask.requirements.map((req, index) => {
                             const result = findResultForRequirement(index);
                             
-                            if (req.type === 'pdf-standard') return null;
-
                             return (
                             <div key={index} className="p-4 border rounded-lg bg-muted/30">
                                 <div className="flex items-start gap-3">
@@ -291,9 +300,9 @@ export function ReviewPageContent({
                         </div>
                     )}
                 </div>
-            )}
-        </CardContent>
-      </Card>
+            </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

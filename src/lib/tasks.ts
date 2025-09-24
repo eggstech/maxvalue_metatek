@@ -20,6 +20,7 @@ export type Task = {
   dueDate: string;
   status: 'Active' | 'Completed' | 'Draft' | 'Pending Review' | 'Overdue' | 'Rejected';
   type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed' | 'Visual Standard';
+  department: 'ADMIN' | 'PLANNING' | 'SPA/MKT' | 'IMPROVEMENT' | 'HQ/Control';
   description?: string;
   requirements?: Requirement[];
   isRecurring?: boolean;
@@ -31,8 +32,9 @@ export const initialTasks: Task[] = [
     name: 'Weekly Display Check',
     store: 'All Stores',
     dueDate: '2024-07-25',
-    status: 'Active',
+    status: 'Completed',
     type: 'Checklist',
+    department: 'SPA/MKT',
     description: 'Ensure all weekly promotional displays are set up correctly and are neat and tidy.\n\n- The main promotional banner should be visible from the store entrance.\n- Promotional materials should not be damaged.\n- All prices must be correct and clearly visible.',
     requirements: [
         {
@@ -60,6 +62,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-31',
     status: 'Pending Review',
     type: 'Data Entry',
+    department: 'PLANNING',
     description: 'Perform a full stock count of all items in the warehouse and on the shelves. Submit the final counts via the data entry form.',
     requirements: [
         {
@@ -77,10 +80,11 @@ export const initialTasks: Task[] = [
   {
     id: 'TSK-003',
     name: 'New Campaign POSM Setup',
-    store: 'Stores Group A',
+    store: 'Store A',
     dueDate: '2024-07-20',
     status: 'Pending Review',
     type: 'Image',
+    department: 'SPA/MKT',
     description: 'Set up the Point of Sale Materials for the new "Summer Sale" campaign. Submit a photo of the final setup for review.',
     requirements: [
         {
@@ -103,10 +107,11 @@ export const initialTasks: Task[] = [
   {
     id: 'TSK-004',
     name: 'Customer Feedback Survey',
-    store: 'Store C, Store D',
+    store: 'Store C',
     dueDate: '2024-08-05',
     status: 'Draft',
     type: 'Data Entry',
+    department: 'IMPROVEMENT',
     description: 'Collect customer feedback using the provided survey form. Aim for at least 20 responses per store.',
   },
   {
@@ -116,6 +121,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-09-30',
     status: 'Active',
     type: 'Checklist',
+    department: 'ADMIN',
     description: 'Conduct a thorough deep clean of the entire store, including staff areas. Use the checklist to ensure all areas are covered.',
     requirements: [
         {
@@ -138,6 +144,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-08-15',
     status: 'Completed',
     type: 'Mixed',
+    department: 'PLANNING',
     description: 'Verify the stock count from the latest delivery and check for discrepancies.',
     requirements: [
         {
@@ -164,6 +171,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-01',
     status: 'Overdue',
     type: 'Image',
+    department: 'ADMIN',
     description: 'Submit a photo of the main customer area to verify cleanliness standards are being met.',
     requirements: [
         {
@@ -190,6 +198,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-22',
     status: 'Rejected',
     type: 'Data Entry',
+    department: 'HQ/Control',
     description: 'Verify prices for 5 specific SKUs.',
     requirements: [
         {
@@ -206,6 +215,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-21',
     status: 'Completed',
     type: 'Image',
+    department: 'SPA/MKT',
     description: 'Setup the new monthly sales promotion display near the entrance.',
     requirements: [
       {
@@ -220,10 +230,11 @@ export const initialTasks: Task[] = [
   {
     id: 'TSK-010',
     name: 'Safety Compliance Check',
-    store: 'Store E',
+    store: 'Store A',
     dueDate: '2024-07-23',
     status: 'Completed',
     type: 'Checklist',
+    department: 'ADMIN',
     description: 'Perform weekly safety check.',
     requirements: [
       {
@@ -243,6 +254,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-08-10',
     status: 'Pending Review',
     type: 'Data Entry',
+    department: 'IMPROVEMENT',
     description: 'Gather customer feedback using the survey questions below.',
     requirements: [
         {
@@ -281,6 +293,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-08-15',
     status: 'Active',
     type: 'Visual Standard',
+    department: 'HQ/Control',
     description: 'Please set up the bookshelf according to the visual standard provided in the PDF and submit a photo.',
     requirements: [
         {
@@ -303,6 +316,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-08-18',
     status: 'Active',
     type: 'Visual Standard',
+    department: 'HQ/Control',
     description: 'A simple check that should pass validation.',
     requirements: [
       {
@@ -351,10 +365,13 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
         dueDate: format(fullDueDate, 'yyyy-MM-dd'),
         status: 'Draft',
         type: primaryType,
+        // @ts-ignore
+        department: 'ADMIN', // Default department, can be changed
         description: newTaskData.description,
         requirements: newTaskData.requirements,
         isRecurring: newTaskData.isRecurring,
     };
     return newTask;
 };
+
 

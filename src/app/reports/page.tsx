@@ -99,7 +99,7 @@ export default function ReportsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card className="relative z-0">
+      <Card>
         <CardHeader className='flex-row items-center justify-between'>
             <div>
                 <CardTitle>Store Performance Report</CardTitle>

@@ -250,6 +250,25 @@ export const initialSubmissions: Submission[] = [
                 value: 'The music was a bit too loud, but the staff were very helpful.'
             }
         ]
+    },
+    {
+        id: 'SUB-011',
+        taskId: 'TSK-013',
+        taskName: 'Simple Bookshelf Check',
+        store: 'Store B',
+        submittedBy: 'User 3',
+        date: '2024-07-27',
+        status: 'Pending Review',
+        submissionTime: '5 minutes ago',
+        imageUrl: 'https://picsum.photos/seed/113/800/600',
+        imageHint: 'bookshelf',
+        results: [
+            {
+                requirementId: 1,
+                type: 'image',
+                value: ['https://picsum.photos/seed/113/800/600'],
+            }
+        ]
     }
 ];
 

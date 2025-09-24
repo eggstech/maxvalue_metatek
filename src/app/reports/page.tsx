@@ -99,7 +99,7 @@ export default function ReportsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card>
+      <Card className="relative z-0">
         <CardHeader className='flex-row items-center justify-between'>
             <div>
                 <CardTitle>Store Performance Report</CardTitle>
@@ -113,8 +113,8 @@ export default function ReportsPage() {
             </Button>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table className="min-w-full divide-y divide-gray-200">
+          <div className="relative overflow-x-auto">
+            <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead rowSpan={2} className="sticky left-0 bg-card z-10 w-[100px]">Store Code</TableHead>

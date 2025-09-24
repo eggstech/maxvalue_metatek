@@ -16,7 +16,6 @@ import {
   Eye,
   LayoutDashboard,
   Settings,
-  Repeat,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -26,9 +25,8 @@ const mainMenuItems = [
 ];
 
 const taskMenuItems = [
-  { href: '/tasks', label: 'All Tasks', icon: ClipboardList, exact: true },
-  { href: '/tasks?tab=schedules', label: 'Schedules', icon: Repeat, exact: false, activeOn: '/tasks' },
-  { href: '/review', label: 'Review', icon: Eye, exact: false },
+  { href: '/tasks', label: 'All Tasks', icon: ClipboardList },
+  { href: '/review', label: 'Review', icon: Eye },
 ]
 
 const settingsMenuItems = [
@@ -37,21 +35,8 @@ const settingsMenuItems = [
 
 export function MainNav() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  const isActive = (href: string, exact: boolean = true, activeOn?: string) => {
-    const currentTab = searchParams.get('tab');
-    const url = new URL(href, 'http://localhost');
-    const hrefTab = url.searchParams.get('tab');
-
-    if (activeOn && pathname.startsWith(activeOn)) {
-        if(hrefTab && hrefTab === currentTab) return true;
-        if(!hrefTab && !currentTab && pathname === href) return true;
-    }
-    
-    if (exact) {
-      return pathname === href && !currentTab;
-    }
+  const isActive = (href: string) => {
     return pathname.startsWith(href);
   };
 
@@ -83,7 +68,7 @@ export function MainNav() {
                 <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                     asChild
-                    isActive={isActive(item.href, item.exact, item.activeOn)}
+                    isActive={isActive(item.href)}
                     tooltip={item.label}
                 >
                     <Link href={item.href}>

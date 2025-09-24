@@ -13,15 +13,12 @@ import { Submission } from '@/lib/submissions';
 import { CircleCheck, Search } from 'lucide-react';
 import { ReviewQueueItem } from './review-queue-item';
 import { Input } from './ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
 import * as React from 'react';
 import Link from 'next/link';
+import { DataTableFacetedFilter } from './data-table-faceted-filter';
+import type { Table, Column } from '@tanstack/react-table';
+import { getTaskById } from '@/lib/tasks';
+
 
 interface ReviewQueueProps {
   reviews: Submission[];
@@ -29,24 +26,92 @@ interface ReviewQueueProps {
   onSelectReview: (id: string) => void;
 }
 
+const taskTypes = [
+    { value: 'Mixed', label: 'Mixed' },
+    { value: 'Image', label: 'Image' },
+    { value: 'Checklist', label: 'Checklist' },
+    { value: 'Data Entry', label: 'Data Entry' },
+    { value: 'Visual Standard', label: 'Visual Standard' },
+]
+
+function ReviewToolbar({ table, storeOptions }: { table: Table<Submission>, storeOptions: {label: string, value: string}[] }) {
+    return (
+        <div className="flex items-center gap-2">
+            <span className='text-sm text-muted-foreground'>Filter by:</span>
+             {table.getColumn("store") && (
+                <DataTableFacetedFilter
+                    column={table.getColumn("store")}
+                    title="Store"
+                    options={storeOptions}
+                />
+            )}
+             {table.getColumn("taskType") && (
+                <DataTableFacetedFilter
+                    column={table.getColumn("taskType")}
+                    title="Task Type"
+                    options={taskTypes}
+                />
+            )}
+        </div>
+    )
+}
+
+
 export function ReviewQueue({
   reviews,
   selectedReviewId,
   onSelectReview,
 }: ReviewQueueProps) {
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [storeFilter, setStoreFilter] = React.useState('all');
+  const [filters, setFilters] = React.useState<Record<string, string[]>>({});
 
-  const filteredReviews = reviews.filter(review => {
-    const matchesSearch = review.taskName
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesStore =
-      storeFilter === 'all' || review.store === storeFilter;
-    return matchesSearch && matchesStore;
-  });
+  const reviewsWithTaskType = React.useMemo(() => {
+    return reviews.map(review => {
+        const task = getTaskById(review.taskId);
+        return {
+            ...review,
+            taskType: task?.type || 'Unknown'
+        }
+    });
+  }, [reviews]);
 
-  const uniqueStores = Array.from(new Set(reviews.map(r => r.store)));
+
+  const filteredReviews = React.useMemo(() => {
+    return reviewsWithTaskType.filter(review => {
+        const storeFilter = filters['store'];
+        const taskTypeFilter = filters['taskType'];
+
+        const matchesSearch = review.taskName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        
+        const matchesStore = !storeFilter || storeFilter.length === 0 || storeFilter.includes(review.store);
+        const matchesTaskType = !taskTypeFilter || taskTypeFilter.length === 0 || taskTypeFilter.includes(review.taskType);
+
+        return matchesSearch && matchesStore && matchesTaskType;
+    });
+  }, [reviewsWithTaskType, searchTerm, filters]);
+
+
+  const uniqueStores = Array.from(new Set(reviews.map(r => r.store))).map(store => ({ value: store, label: store }));
+
+  // Mock table object for DataTableFacetedFilter
+  const mockTable = {
+    getColumn: (id: string) => ({
+      getFacetedUniqueValues: () => {
+        const counts = new Map<string, number>();
+        reviewsWithTaskType.forEach(review => {
+            const key = (review as any)[id] as string;
+            counts.set(key, (counts.get(key) || 0) + 1);
+        });
+        return counts;
+      },
+      getFilterValue: () => filters[id],
+      setFilterValue: (value: any) => {
+        setFilters(prev => ({...prev, [id]: value}))
+      },
+    }),
+  } as unknown as Table<Submission>;
 
   return (
     <Card className="h-full flex flex-col">
@@ -57,30 +122,16 @@ export function ReviewQueue({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden">
-        <div className="flex flex-col md:flex-row gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by task name..."
-              className="pl-8"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Select value={storeFilter} onValueChange={setStoreFilter}>
-            <SelectTrigger className="md:w-[150px]">
-              <SelectValue placeholder="Filter by store" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Stores</SelectItem>
-              {uniqueStores.map(store => (
-                <SelectItem key={store} value={store}>
-                  {store}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by task name..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
         </div>
+        <ReviewToolbar table={mockTable} storeOptions={uniqueStores} />
 
         <ScrollArea className="flex-1 -mx-6 px-3">
           <div className="flex flex-col gap-3 pr-3">

@@ -148,7 +148,13 @@ const SidebarProvider = React.forwardRef<
             ref={ref}
             {...props}
           >
-            {children}
+            <div
+              data-state={state}
+              className={cn("group flex w-full flex-1", className)}
+              {...props}
+            >
+              {children}
+            </div>
           </div>
         </TooltipProvider>
       </SidebarContext.Provider>
@@ -216,7 +222,7 @@ const Sidebar = React.forwardRef<
     return (
       <div
         ref={ref}
-        className="group peer hidden md:block text-sidebar-foreground"
+        className="group/sidebar hidden md:block text-sidebar-foreground"
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
@@ -324,9 +330,9 @@ const SidebarInset = React.forwardRef<
       ref={ref}
       className={cn(
         "relative flex min-h-svh flex-1 flex-col bg-background transition-[margin-left] duration-200 ease-linear",
-        "peer-data-[state=expanded]:md:ml-[var(--sidebar-width)]",
-        "peer-data-[state=collapsed]:md:ml-[var(--sidebar-width-icon)]",
-        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        "group-data-[state=expanded]:md:ml-[var(--sidebar-width)]",
+        "group-data-[state=collapsed]:md:ml-[var(--sidebar-width-icon)]",
+        "group-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:group-data-[variant=inset]:m-2 md:group-data-[state=collapsed]:group-data-[variant=inset]:ml-2 md:group-data-[variant=inset]:ml-0 md:group-data-[variant=inset]:rounded-xl md:group-data-[variant=inset]:shadow",
         className
       )}
       {...props}
@@ -764,3 +770,5 @@ export {
   SidebarTrigger,
   useSidebar,
 }
+
+    

@@ -36,7 +36,7 @@ const taskTypes = [
 
 function ReviewToolbar({ table, storeOptions }: { table: Table<Submission>, storeOptions: {label: string, value: string}[] }) {
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
             <span className='text-sm text-muted-foreground'>Filter by:</span>
              {table.getColumn("store") && (
                 <DataTableFacetedFilter
@@ -122,7 +122,7 @@ export function ReviewQueue({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden">
-        <div className="relative flex-1">
+        <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by task name..."

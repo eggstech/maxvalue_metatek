@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from './ui/select';
 import * as React from 'react';
+import Link from 'next/link';
 
 interface ReviewQueueProps {
   reviews: Submission[];
@@ -82,15 +83,18 @@ export function ReviewQueue({
         </div>
 
         <ScrollArea className="flex-1 -mx-6 px-3">
-          <div className="flex flex-col gap-2 pr-3">
+          <div className="flex flex-col gap-3 pr-3">
             {filteredReviews.length > 0 ? (
               filteredReviews.map(review => (
-                <ReviewQueueItem
-                  key={review.id}
-                  review={review}
-                  isSelected={review.id === selectedReviewId}
-                  onClick={() => onSelectReview(review.id)}
-                />
+                <Link key={review.id} href="#" onClick={(e) => {
+                  e.preventDefault();
+                  onSelectReview(review.id);
+                }}>
+                  <ReviewQueueItem
+                    review={review}
+                    isSelected={review.id === selectedReviewId}
+                  />
+                </Link>
               ))
             ) : (
               <div className="text-center text-muted-foreground p-8">

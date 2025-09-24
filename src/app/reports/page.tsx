@@ -19,11 +19,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { initialTasks, Task } from '@/lib/tasks';
+import { users, Department } from '@/lib/users';
 import { cn } from '@/lib/utils';
 import { FileDown } from 'lucide-react';
 import * as React from 'react';
 
-type Department = 'ADMIN' | 'PLANNING' | 'SPA/MKT' | 'IMPROVEMENT' | 'HQ/Control';
 const DEPARTMENTS: Department[] = ['ADMIN', 'PLANNING', 'SPA/MKT', 'IMPROVEMENT', 'HQ/Control'];
 const COMPLETION_THRESHOLD = 90; // 90%
 
@@ -44,13 +44,15 @@ const calculatePercentage = (completed: number, total: number) => {
   return Math.round((completed / total) * 100);
 };
 
+// Create a map for quick user lookup
+const userMap = new Map(users.map(user => [user.id, user]));
+
 export default function ReportsPage() {
 
   const reportData = React.useMemo(() => {
     const stores = Array.from(new Set(initialTasks.map(t => t.store).filter(s => s !== 'All Stores')));
     
     const data: StoreReport[] = stores.map((storeName, index) => {
-      const storeTasks = initialTasks.filter(t => t.store === storeName || (t.store === 'All Stores' && !stores.includes(t.store)));
       
       const report: StoreReport = {
         storeCode: `ST-${String(index + 1).padStart(3, '0')}`,
@@ -65,7 +67,14 @@ export default function ReportsPage() {
         },
       };
 
-      storeTasks.forEach(task => {
+      // Get tasks assigned specifically to this store or to "All Stores"
+      const applicableTasks = initialTasks.filter(task => task.store === storeName || task.store === 'All Stores');
+
+      applicableTasks.forEach(task => {
+        const assigner = userMap.get(task.assignerId);
+        if (!assigner) return; // Skip if assigner not found
+
+        const department = assigner.department;
         const isCompleted = task.status === 'Completed' || task.status === 'Approved';
         
         // Update overview
@@ -73,27 +82,13 @@ export default function ReportsPage() {
         if (isCompleted) report.overview.completed++;
 
         // Update department stats
-        if (task.department && report.departments[task.department]) {
-          report.departments[task.department].total++;
+        if (report.departments[department]) {
+          report.departments[department].total++;
           if (isCompleted) {
-            report.departments[task.department].completed++;
+            report.departments[department].completed++;
           }
         }
       });
-      
-      // Also account for tasks assigned to "All Stores"
-      initialTasks.filter(t => t.store === 'All Stores').forEach(task => {
-        const isCompleted = task.status === 'Completed' || task.status === 'Approved';
-         report.overview.total++;
-         if (isCompleted) report.overview.completed++;
-         if (task.department && report.departments[task.department]) {
-          report.departments[task.department].total++;
-          if (isCompleted) {
-            report.departments[task.department].completed++;
-          }
-        }
-      });
-
 
       return report;
     });

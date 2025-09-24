@@ -26,6 +26,7 @@ import { Task, initialTasks, addTask as addTaskToState } from '@/lib/tasks';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTableFacetedFilter } from '@/components/data-table-faceted-filter';
 import { Table } from '@tanstack/react-table';
+import { useSearchParams } from 'next/navigation';
 
 const statuses = [
   {
@@ -77,6 +78,9 @@ function TaskTableToolbar({ table }: { table: Table<Task>}) {
 export default function TasksPage() {
   const [tasks, setTasks] = React.useState<Task[]>(initialTasks);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const searchParams = useSearchParams();
+  const tab = searchParams.get('tab') || 'all';
+
 
   const recurringTasks = tasks.filter(t => t.isRecurring);
 
@@ -87,7 +91,7 @@ export default function TasksPage() {
   };
 
   return (
-    <Tabs defaultValue="all">
+    <Tabs defaultValue={tab} value={tab}>
       <div className="flex items-center justify-between mb-4">
         <TabsList>
           <TabsTrigger value="all">All Tasks</TabsTrigger>

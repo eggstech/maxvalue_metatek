@@ -21,18 +21,20 @@ import {
   TextCursorInput,
   ImageIcon,
   ListChecks,
+  FileText,
 } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Submission, SubmissionResult } from '@/lib/submissions';
-import { getTaskById } from '@/lib/tasks';
+import { getTaskById, Requirement } from '@/lib/tasks';
 import { Skeleton } from '@/components/ui/skeleton';
 import ReactMarkdown from 'react-markdown';
 import { Label } from '@/components/ui/label';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Link from 'next/link';
 
-const RequirementIcon = ({ type }: { type: string }) => {
+const RequirementIcon = ({ type }: { type: Requirement['type'] }) => {
   switch (type) {
     case 'image':
     case 'pdf-standard':
@@ -154,6 +156,15 @@ export function ReviewPageContent({
                   <RequirementIcon type={req.type} />
                   <div className="flex-1 space-y-3">
                     <Label className="text-base font-semibold">{req.label}</Label>
+
+                    {req.type === 'pdf-standard' && req.pdfUrl && (
+                        <Button asChild variant="outline" size="sm">
+                            <Link href={req.pdfUrl} target="_blank">
+                                <FileText className="mr-2" />
+                                View Standard PDF
+                            </Link>
+                        </Button>
+                    )}
 
                     {result ? (
                       <div className="rounded-md bg-background/50 p-4 border border-dashed">

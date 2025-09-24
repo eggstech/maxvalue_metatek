@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { getTaskById } from '@/lib/tasks';
-import { Camera, CheckSquare, Image as ImageIcon, Send, TextCursorInput, ListChecks, Info, AlertCircle } from 'lucide-react';
+import { Camera, CheckSquare, Image as ImageIcon, Send, TextCursorInput, ListChecks, Info, AlertCircle, FileText } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter, useParams } from 'next/navigation';
 import * as React from 'react';
@@ -24,6 +24,7 @@ const RequirementIcon = ({type}: {type: string}) => {
         case 'image': return <ImageIcon className="h-5 w-5 text-muted-foreground" />;
         case 'data-entry': return <TextCursorInput className="h-5 w-5 text-muted-foreground" />;
         case 'checklist': return <ListChecks className="h-5 w-5 text-muted-foreground" />;
+        case 'pdf-standard': return <FileText className="h-5 w-5 text-muted-foreground" />;
         default: return <Info className="h-5 w-5 text-muted-foreground" />;
     }
 }
@@ -110,6 +111,12 @@ export default function FieldSubmissionPage() {
                             </div>
                             
                             <fieldset disabled={!isActionable} className="space-y-4">
+                                {req.type === 'pdf-standard' && req.pdfUrl && (
+                                    <div className='aspect-[4/3]'>
+                                        <iframe src={req.pdfUrl} width="100%" height="100%" />
+                                    </div>
+                                )}
+                                
                                 {req.type === 'image' && (
                                     <div>
                                         <Input type="file" accept="image/*" capture="environment" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />

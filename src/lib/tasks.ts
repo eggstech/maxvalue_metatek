@@ -3,13 +3,14 @@
 import { format } from "date-fns";
 
 export type Requirement = {
-    type: 'image' | 'data-entry' | 'checklist';
+    type: 'image' | 'data-entry' | 'checklist' | 'pdf-standard';
     label: string;
     min?: number;
     max?: number;
     checklistItems?: { text: string }[];
     entryType?: 'text' | 'single' | 'multiple';
     options?: { text: string }[];
+    pdfUrl?: string;
 }
 
 export type Task = {
@@ -18,7 +19,7 @@ export type Task = {
   store: string;
   dueDate: string;
   status: 'Active' | 'Completed' | 'Draft' | 'Pending Review' | 'Overdue' | 'Rejected';
-  type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed';
+  type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed' | 'Visual Standard';
   description?: string;
   requirements?: Requirement[];
   isRecurring?: boolean;
@@ -272,6 +273,28 @@ export const initialTasks: Task[] = [
             entryType: 'text'
         }
     ]
+  },
+  {
+    id: 'TSK-012',
+    name: 'Bookshelf Standard Check',
+    store: 'Store A',
+    dueDate: '2024-08-15',
+    status: 'Active',
+    type: 'Visual Standard',
+    description: 'Please set up the bookshelf according to the visual standard provided in the PDF and submit a photo.',
+    requirements: [
+        {
+            type: 'pdf-standard',
+            label: 'Bookshelf Display Standard',
+            pdfUrl: '/standards/bookshelf-standard.pdf'
+        },
+        {
+            type: 'image',
+            label: 'Photo of your completed bookshelf display',
+            min: 1,
+            max: 1
+        }
+    ]
   }
 ];
 
@@ -288,7 +311,9 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
     // Determine the primary type
     const reqTypes = new Set(newTaskData.requirements?.map((r: Requirement) => r.type) || []);
     let primaryType: Task['type'] = 'Data Entry'; // Default
-    if (reqTypes.size > 1) {
+    if (reqTypes.has('pdf-standard')) {
+        primaryType = 'Visual Standard';
+    } else if (reqTypes.size > 1) {
         primaryType = 'Mixed';
     } else if (reqTypes.has('image')) {
         primaryType = 'Image';

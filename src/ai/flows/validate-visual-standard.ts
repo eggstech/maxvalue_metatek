@@ -53,7 +53,16 @@ const validateVisualStandardFlow = ai.defineFlow(
     
     await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
 
-    const mockApiResponse: ValidateVisualStandardOutput = {
+    // If the PDF url includes 'ok-standard.pdf', return an OK status.
+    if (input.standardPdfUrl.includes('ok-standard.pdf')) {
+      const mockOkApiResponse: ValidateVisualStandardOutput = {
+        status: 'OK',
+      };
+      return mockOkApiResponse;
+    }
+
+    // Otherwise, return a failed status.
+    const mockFailApiResponse: ValidateVisualStandardOutput = {
       status: 'NOT_OK',
       failureReason: 'The bookshelf was not set up according to the visual standard.',
       failedZones: [
@@ -64,6 +73,7 @@ const validateVisualStandardFlow = ai.defineFlow(
       ],
     };
 
-    return mockApiResponse;
+    return mockFailApiResponse;
   }
 );
+

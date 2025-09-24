@@ -295,6 +295,28 @@ export const initialTasks: Task[] = [
             max: 1
         }
     ]
+  },
+  {
+    id: 'TSK-013',
+    name: 'Simple Bookshelf Check',
+    store: 'Store B',
+    dueDate: '2024-08-18',
+    status: 'Active',
+    type: 'Visual Standard',
+    description: 'A simple check that should pass validation.',
+    requirements: [
+      {
+        type: 'pdf-standard',
+        label: 'Simple Display Standard',
+        pdfUrl: '/standards/ok-standard.pdf',
+      },
+      {
+        type: 'image',
+        label: 'Photo of your completed bookshelf display',
+        min: 1,
+        max: 1,
+      },
+    ],
   }
 ];
 
@@ -335,3 +357,4 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
     };
     return newTask;
 };
+

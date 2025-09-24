@@ -10,6 +10,8 @@ import {
   ListChecks,
   TextCursorInput,
   FileText,
+  ClipboardList,
+  FileCheck,
 } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -89,6 +91,9 @@ export function ReviewQueueItem({
             {review.taskName}
           </p>
           <p className="text-xs text-muted-foreground">{review.store}</p>
+          <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground font-mono">
+            <span className="truncate" title={review.id}>Sub: {review.id}</span>
+          </div>
           <div className="flex items-center gap-2 mt-2">
             <Avatar className="h-5 w-5">
               {submitterAvatar && (

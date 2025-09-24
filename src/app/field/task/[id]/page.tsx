@@ -18,6 +18,7 @@ import ReactMarkdown from 'react-markdown';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { getLastSubmissionForTask } from '@/lib/submissions';
 import { validateVisualStandard } from '@/ai/flows/validate-visual-standard';
+import { ValidateVisualStandardOutput } from '@/ai/flows/validate-visual-standard-types';
 
 
 const RequirementIcon = ({type}: {type: string}) => {

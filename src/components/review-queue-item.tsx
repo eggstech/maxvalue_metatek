@@ -6,13 +6,8 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
 import {
-  ImageIcon,
-  ListChecks,
-  TextCursorInput,
-  FileText,
   ClipboardList,
 } from 'lucide-react';
-import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 interface ReviewQueueItemProps {
@@ -20,11 +15,6 @@ interface ReviewQueueItemProps {
   isSelected: boolean;
   onClick: () => void;
 }
-
-const getPrimaryRequirementType = (review: Submission) => {
-    // Return a generic icon as a submission can have multiple types.
-    return <ClipboardList className="h-5 w-5 text-muted-foreground" />;
-};
 
 const getSubmitterAvatar = (avatarId?: string) => {
   if (!avatarId) return null;
@@ -47,10 +37,6 @@ export function ReviewQueueItem({
       onClick={onClick}
     >
       <div className="flex items-center gap-4 w-full">
-         <div className="h-10 w-10 flex-shrink-0 rounded-md bg-muted flex items-center justify-center">
-            {getPrimaryRequirementType(review)}
-          </div>
-
         <div className="flex-1 text-left overflow-hidden">
           <p
             className={cn(

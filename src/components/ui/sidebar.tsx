@@ -35,6 +35,7 @@ type SidebarContext = {
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
+  mounted: boolean
 }
 
 const SidebarContext = React.createContext<SidebarContext | null>(null)
@@ -70,6 +71,7 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
+    const [mounted, setMounted] = React.useState(false)
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
@@ -113,6 +115,10 @@ const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [toggleSidebar])
 
+    React.useEffect(() => {
+      setMounted(true)
+    }, [])
+
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? "expanded" : "collapsed"
@@ -126,8 +132,18 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        mounted,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+      [
+        state,
+        open,
+        setOpen,
+        isMobile,
+        openMobile,
+        setOpenMobile,
+        toggleSidebar,
+        mounted,
+      ]
     )
 
     return (
@@ -142,7 +158,7 @@ const SidebarProvider = React.forwardRef<
               } as React.CSSProperties
             }
             className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+              "group/sidebar-wrapper flex min-h-svh w-full",
               className
             )}
             ref={ref}
@@ -182,7 +198,11 @@ const Sidebar = React.forwardRef<
     },
     ref
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, openMobile, setOpenMobile, mounted } = useSidebar()
+
+    if (!mounted) {
+      return null
+    }
 
     if (collapsible === "none") {
       return (
@@ -222,11 +242,12 @@ const Sidebar = React.forwardRef<
     return (
       <div
         ref={ref}
-        className="group/sidebar hidden md:block text-sidebar-foreground"
+        className={cn("group/sidebar hidden md:block text-sidebar-foreground", className)}
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
         data-side={side}
+        {...props}
       >
         {/* This is what handles the sidebar gap on desktop */}
         <div
@@ -249,9 +270,8 @@ const Sidebar = React.forwardRef<
             variant === "floating" || variant === "inset"
               ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
               : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
-            className
           )}
-          {...props}
+          
         >
           <div
             data-sidebar="sidebar"
@@ -331,8 +351,9 @@ const SidebarInset = React.forwardRef<
       className={cn(
         "relative flex min-h-svh flex-1 flex-col bg-background transition-[margin-left] duration-200 ease-linear",
         "group-data-[state=expanded]:md:ml-[var(--sidebar-width)]",
+        "group-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:group-data-[variant=inset]:m-2 md:group-data-[variant=inset]:ml-0 md:group-data-[variant=inset]:rounded-xl md:group-data-[variant=inset]:shadow",
         "group-data-[state=collapsed]:md:ml-[var(--sidebar-width-icon)]",
-        "group-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:group-data-[variant=inset]:m-2 md:group-data-[state=collapsed]:group-data-[variant=inset]:ml-2 md:group-data-[variant=inset]:ml-0 md:group-data-[variant=inset]:rounded-xl md:group-data-[variant=inset]:shadow",
+        "md:group-data-[state=collapsed]:group-data-[variant=inset]:ml-2",
         className
       )}
       {...props}
@@ -770,7 +791,3 @@ export {
   SidebarTrigger,
   useSidebar,
 }
-
-    
-
-    

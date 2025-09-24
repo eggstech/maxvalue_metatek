@@ -11,7 +11,6 @@ import {
   TextCursorInput,
   FileText,
   ClipboardList,
-  FileCheck,
 } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -23,20 +22,8 @@ interface ReviewQueueItemProps {
 }
 
 const getPrimaryRequirementType = (review: Submission) => {
-  if (review.results.length === 0) return <FileCheck className="h-5 w-5 text-muted-foreground" />;
-  // This is a simplified logic. A more robust solution would check task definition.
-  const primaryResult = review.results[0];
-  switch (primaryResult.type) {
-    case 'image':
-    case 'pdf-standard':
-      return <ImageIcon className="h-5 w-5 text-muted-foreground" />;
-    case 'checklist':
-      return <ListChecks className="h-5 w-5 text-muted-foreground" />;
-    case 'data-entry':
-      return <TextCursorInput className="h-5 w-5 text-muted-foreground" />;
-    default:
-      return <FileText className="h-5 w-5 text-muted-foreground" />;
-  }
+    // Return a generic icon as a submission can have multiple types.
+    return <ClipboardList className="h-5 w-5 text-muted-foreground" />;
 };
 
 const getSubmitterAvatar = (avatarId?: string) => {

@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview Types and schemas for the visual standard validation flow.
  */

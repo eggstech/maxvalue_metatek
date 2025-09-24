@@ -6,11 +6,7 @@ export type SubmissionResult = {
     requirementId: number; // Corresponds to the index in the task's requirements array
     type: Requirement['type'];
     value: any; // Could be a string (data-entry), an array of image URLs, or an array of booleans (checklist)
-    imageUrl?: string;
-    imageHint?: string;
-    checklist?: { id: number; text: string; pass: boolean; checked?: boolean, reason?: string }[];
 };
-
 
 export type Submission = {
     id: string;
@@ -18,14 +14,13 @@ export type Submission = {
     taskName: string;
     store: string;
     submittedBy: string;
+    submittedByAvatarId?: string;
     date: string;
     status: 'Approved' | 'Rejected' | 'Pending Review';
     submissionTime: string; // e.g. "2 hours ago" for display
     results: SubmissionResult[];
     feedback?: string;
-    imageUrl?: string; // Main image for display if available
-    imageHint?: string; // AI hint for the main image
-    checklist?: { id: number; text: string; checked: boolean; reason?: string }[];
+    primaryImageId?: string; // Main image for display if available
 };
 
 export const initialSubmissions: Submission[] = [
@@ -34,17 +29,17 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-003',
         taskName: 'New Campaign POSM Setup',
         store: 'Store A', 
-        submittedBy: 'User 2', 
-        date: '2024-07-19', 
+        submittedBy: 'Emily Clark', 
+        submittedByAvatarId: 'user-avatar-2',
+        date: '2024-07-28', 
         status: 'Pending Review',
         submissionTime: '2 hours ago',
-        imageUrl: 'https://picsum.photos/seed/101/800/600',
-        imageHint: 'retail display',
+        primaryImageId: 'review-image-1',
         results: [
             {
                 requirementId: 0,
                 type: 'image',
-                value: ['https://picsum.photos/seed/101/800/600', 'https://picsum.photos/seed/111/800/600'],
+                value: ['review-image-1', 'review-image-2'],
             },
             {
                 requirementId: 1,
@@ -55,11 +50,6 @@ export const initialSubmissions: Submission[] = [
                     { text: 'Brochures are available at the counter.', pass: false },
                 ],
             }
-        ],
-        checklist: [
-            { id: 1, text: 'Main banner is visible from entrance.', checked: true },
-            { id: 2, text: 'Wobblers are attached to featured products.', checked: true },
-            { id: 3, text: 'Brochures are available at the counter.', checked: false, reason: 'Ran out of stock.' },
         ]
     },
     { 
@@ -67,12 +57,12 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-001',
         taskName: 'Weekly Display Check',
         store: 'Store C', 
-        submittedBy: 'User 4', 
-        date: '2024-07-20', 
+        submittedBy: 'Ben Carter', 
+        submittedByAvatarId: 'user-avatar-5',
+        date: '2024-07-28', 
         status: 'Pending Review',
         submissionTime: '5 hours ago',
-        imageUrl: 'https://picsum.photos/seed/102/800/600',
-        imageHint: 'store aisle',
+        primaryImageId: 'review-image-2',
         results: [
              {
                 requirementId: 0,
@@ -85,12 +75,8 @@ export const initialSubmissions: Submission[] = [
             {
                 requirementId: 1,
                 type: 'image',
-                value: 'https://picsum.photos/seed/102/800/600',
+                value: ['review-image-2'],
             }
-        ],
-        checklist: [
-            { id: 1, text: 'Aisle is clean and unobstructed.', checked: true },
-            { id: 2, text: 'Products are front-facing.', checked: true },
         ]
     },
      { 
@@ -98,17 +84,17 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-006',
         taskName: 'Stock Count Verification',
         store: 'Store B', 
-        submittedBy: 'User 3', 
-        date: '2024-07-21', 
+        submittedBy: 'Jackson Lee',
+        submittedByAvatarId: 'user-avatar-3',
+        date: '2024-07-27', 
         status: 'Approved',
         submissionTime: '1 day ago',
-        imageUrl: 'https://picsum.photos/seed/103/800/600',
-        imageHint: 'delivery note',
+        primaryImageId: 'review-image-3',
         results: [
             {
                 requirementId: 0,
                 type: 'image',
-                value: 'https://picsum.photos/seed/103/800/600',
+                value: ['review-image-3'],
             },
             {
                 requirementId: 1,
@@ -118,10 +104,6 @@ export const initialSubmissions: Submission[] = [
                     { id: 2, text: 'Discrepancy report filed.', pass: true },
                 ],
             }
-        ],
-        checklist: [
-            { id: 1, text: 'Count matches system records.', checked: false, reason: 'System shows 50, physical count is 48.' },
-            { id: 2, text: 'Discrepancy report filed.', checked: true },
         ]
     },
     { 
@@ -129,17 +111,17 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-007',
         taskName: 'Cleanliness Audit Photo',
         store: 'Store F', 
-        submittedBy: 'User 10', 
-        date: '2024-07-22', 
+        submittedBy: 'Sofia Davis',
+        submittedByAvatarId: 'user-avatar-6',
+        date: '2024-07-26', 
         status: 'Pending Review',
         submissionTime: '2 days ago',
-        imageUrl: 'https://picsum.photos/seed/104/800/600',
-        imageHint: 'clean floor',
+        primaryImageId: 'review-image-4',
         results: [
             {
                 requirementId: 0,
                 type: 'image',
-                value: 'https://picsum.photos/seed/104/800/600',
+                value: ['review-image-4'],
             },
             {
                 requirementId: 1,
@@ -149,10 +131,6 @@ export const initialSubmissions: Submission[] = [
                      { id: 2, text: 'Shelves are dust-free.', pass: true },
                 ],
             }
-        ],
-        checklist: [
-            { id: 1, text: 'Floor is clean.', checked: true },
-            { id: 2, text: 'Shelves are dust-free.', checked: true },
         ]
     },
     { 
@@ -160,42 +138,48 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-009',
         taskName: 'Monthly Sales Display',
         store: 'Store B', 
-        submittedBy: 'User 3', 
-        date: '2024-07-21', 
+        submittedBy: 'Jackson Lee',
+        submittedByAvatarId: 'user-avatar-3',
+        date: '2024-07-25', 
         status: 'Approved',
         submissionTime: '3 days ago',
-        imageUrl: 'https://picsum.photos/seed/105/800/600',
-        imageHint: 'sales promotion',
+        primaryImageId: 'review-image-1',
         feedback: 'Great work, looks very appealing!',
-        results: [{ requirementId: 0, type: 'image', value: 'https://picsum.photos/seed/105/800/600' }]
+        results: [{ requirementId: 0, type: 'image', value: ['review-image-1'] }]
     },
     { 
         id: 'SUB-006', 
         taskId: 'TSK-007',
         taskName: 'Cleanliness Audit Photo',
         store: 'Store D', 
-        submittedBy: 'User 7', 
-        date: '2024-07-19', 
+        submittedBy: 'William Kim',
+        submittedByAvatarId: 'user-avatar-7',
+        date: '2024-07-24', 
         status: 'Rejected',
         submissionTime: '4 days ago',
-        imageUrl: 'https://picsum.photos/seed/106/800/600',
-        imageHint: 'messy aisle',
+        primaryImageId: 'review-image-2',
         feedback: 'Image is blurry and the floor in the corner appears to be dirty. Please retake the photo with better lighting and ensure the area is fully clean.',
-        results: [{ requirementId: 0, type: 'image', value: 'https://picsum.photos/seed/106/800/600'}]
+        results: [{ requirementId: 0, type: 'image', value: ['review-image-2']}]
     },
      { 
         id: 'SUB-007', 
         taskId: 'TSK-010',
         taskName: 'Safety Compliance Check',
         store: 'Store E', 
-        submittedBy: 'User 9', 
-        date: '2024-07-23', 
+        submittedBy: 'Isabella Nguyen',
+        submittedByAvatarId: 'user-avatar-4',
+        date: '2024-07-27', 
         status: 'Approved',
         submissionTime: '1 day ago',
-        results: [],
-        checklist: [
-            { id: 1, text: 'Fire extinguisher is accessible.', checked: true },
-            { id: 2, text: 'Emergency exits are clear.', checked: true },
+        results: [
+            {
+                requirementId: 0,
+                type: 'checklist',
+                value: [
+                    { id: 1, text: 'Fire extinguisher is accessible.', pass: true },
+                    { id: 2, text: 'Emergency exits are clear.', pass: true },
+                ],
+            }
         ]
     },
     { 
@@ -203,8 +187,9 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-008',
         taskName: 'Price Check',
         store: 'Store B', 
-        submittedBy: 'User 3', 
-        date: '2024-07-22', 
+        submittedBy: 'Jackson Lee',
+        submittedByAvatarId: 'user-avatar-3',
+        date: '2024-07-26', 
         status: 'Rejected',
         submissionTime: '2 days ago',
         feedback: 'The price for SKU-101 is incorrect in your submission. Please verify against the master price list and resubmit.',
@@ -215,8 +200,9 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-002',
         taskName: 'End-of-Month Stock Count',
         store: 'Store A',
-        submittedBy: 'User 2',
-        date: '2024-07-26',
+        submittedBy: 'Emily Clark',
+        submittedByAvatarId: 'user-avatar-2',
+        date: '2024-07-28',
         status: 'Pending Review',
         submissionTime: '15 minutes ago',
         results: [
@@ -229,8 +215,9 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-011',
         taskName: 'In-Store Customer Survey',
         store: 'Store A',
-        submittedBy: 'User 2',
-        date: '2024-07-26',
+        submittedBy: 'Emily Clark',
+        submittedByAvatarId: 'user-avatar-2',
+        date: '2024-07-28',
         status: 'Pending Review',
         submissionTime: '10 minutes ago',
         results: [
@@ -256,17 +243,17 @@ export const initialSubmissions: Submission[] = [
         taskId: 'TSK-013',
         taskName: 'Simple Bookshelf Check',
         store: 'Store B',
-        submittedBy: 'User 3',
-        date: '2024-07-27',
+        submittedBy: 'Jackson Lee',
+        submittedByAvatarId: 'user-avatar-3',
+        date: '2024-07-28',
         status: 'Pending Review',
         submissionTime: '5 minutes ago',
-        imageUrl: 'https://picsum.photos/seed/113/800/600',
-        imageHint: 'bookshelf',
+        primaryImageId: 'review-image-3',
         results: [
             {
                 requirementId: 1,
                 type: 'image',
-                value: ['https://picsum.photos/seed/113/800/600'],
+                value: ['review-image-3'],
             }
         ]
     }

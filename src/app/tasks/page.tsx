@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { CircleIcon, PlusCircle, CheckCircle, Clock, XCircle, Hourglass, FileText, Component } from 'lucide-react';
+import { CircleIcon, PlusCircle, CheckCircle, Clock, XCircle, Hourglass, FileText } from 'lucide-react';
 import { CreateTaskForm } from '@/components/create-task-form';
 import * as React from 'react';
 import { columns } from './columns';
@@ -56,7 +56,7 @@ const statuses = [
   {
     value: 'Rejected',
     label: 'Rejected',
-    icon: Component,
+    icon: XCircle,
   },
 ]
 

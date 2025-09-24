@@ -10,14 +10,16 @@ import {
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Submission } from '@/lib/submissions';
-import { CircleCheck, Search } from 'lucide-react';
+import { CircleCheck, Filter, Search } from 'lucide-react';
 import { ReviewQueueItem } from './review-queue-item';
 import { Input } from './ui/input';
 import * as React from 'react';
 import Link from 'next/link';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
-import type { Table, Column } from '@tanstack/react-table';
+import type { Table } from '@tanstack/react-table';
 import { getTaskById } from '@/lib/tasks';
+import { Button } from './ui/button';
+import { Cross2Icon } from '@radix-ui/react-icons';
 
 
 interface ReviewQueueProps {
@@ -34,10 +36,20 @@ const taskTypes = [
     { value: 'Visual Standard', label: 'Visual Standard' },
 ]
 
-function ReviewToolbar({ table, storeOptions }: { table: Table<Submission>, storeOptions: {label: string, value: string}[] }) {
+function ReviewToolbar({ 
+  table, 
+  storeOptions,
+  isFiltered,
+  onClearFilters 
+}: { 
+  table: Table<Submission>, 
+  storeOptions: {label: string, value: string}[],
+  isFiltered: boolean,
+  onClearFilters: () => void,
+}) {
     return (
         <div className="flex flex-wrap items-center gap-2">
-            <span className='text-sm text-muted-foreground'>Filter by:</span>
+            <Filter className='h-4 w-4 text-muted-foreground' />
              {table.getColumn("store") && (
                 <DataTableFacetedFilter
                     column={table.getColumn("store")}
@@ -52,6 +64,16 @@ function ReviewToolbar({ table, storeOptions }: { table: Table<Submission>, stor
                     options={taskTypes}
                 />
             )}
+            {isFiltered && (
+              <Button
+                variant="ghost"
+                onClick={onClearFilters}
+                className="h-8 px-2 lg:px-3"
+              >
+                Reset
+                <Cross2Icon className="ml-2 h-4 w-4" />
+              </Button>
+            )}
         </div>
     )
 }
@@ -64,6 +86,7 @@ export function ReviewQueue({
 }: ReviewQueueProps) {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [filters, setFilters] = React.useState<Record<string, string[]>>({});
+  const isFiltered = Object.values(filters).some(v => v?.length > 0);
 
   const reviewsWithTaskType = React.useMemo(() => {
     return reviews.map(review => {
@@ -95,6 +118,10 @@ export function ReviewQueue({
 
   const uniqueStores = Array.from(new Set(reviews.map(r => r.store))).map(store => ({ value: store, label: store }));
 
+  const clearFilters = () => {
+    setFilters({});
+  }
+
   // Mock table object for DataTableFacetedFilter
   const mockTable = {
     getColumn: (id: string) => ({
@@ -102,7 +129,9 @@ export function ReviewQueue({
         const counts = new Map<string, number>();
         reviewsWithTaskType.forEach(review => {
             const key = (review as any)[id] as string;
-            counts.set(key, (counts.get(key) || 0) + 1);
+            if (key) {
+              counts.set(key, (counts.get(key) || 0) + 1);
+            }
         });
         return counts;
       },
@@ -131,7 +160,12 @@ export function ReviewQueue({
             onChange={e => setSearchTerm(e.target.value)}
           />
         </div>
-        <ReviewToolbar table={mockTable} storeOptions={uniqueStores} />
+        <ReviewToolbar 
+          table={mockTable} 
+          storeOptions={uniqueStores} 
+          isFiltered={isFiltered}
+          onClearFilters={clearFilters}
+        />
 
         <ScrollArea className="flex-1 -mx-6 px-3">
           <div className="flex flex-col gap-3 pr-3">

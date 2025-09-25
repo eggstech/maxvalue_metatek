@@ -134,10 +134,10 @@ export default function RootLayoutClient({
 
   if (isLoginPage || isFieldPage) {
     return (
-      <>
+      <div>
         {children}
         <Toaster />
-      </>
+      </div>
     );
   }
 

@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { CircleIcon, PlusCircle, CheckCircle, Clock, XCircle, Hourglass, FileText } from 'lucide-react';
+import { PlusCircle, CheckCircle, Clock, XCircle, Hourglass, FileText } from 'lucide-react';
 import { CreateTaskForm } from '@/components/create-task-form';
 import * as React from 'react';
 import { columns } from './columns';
@@ -75,7 +75,7 @@ function TaskTableToolbar({ table }: { table: Table<Task>}) {
   )
 }
 
-export default function TasksPage() {
+function TasksPageComponent() {
   const [tasks, setTasks] = React.useState<Task[]>(initialTasks);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const searchParams = useSearchParams();
@@ -145,5 +145,14 @@ export default function TasksPage() {
         </Card>
       </TabsContent>
     </Tabs>
+  );
+}
+
+
+export default function TasksPage() {
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <TasksPageComponent />
+    </React.Suspense>
   );
 }

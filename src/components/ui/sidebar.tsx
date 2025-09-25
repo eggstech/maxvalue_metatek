@@ -247,17 +247,13 @@ SidebarRail.displayName = "SidebarRail"
 
 const SidebarInset = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"main">
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   return (
-    <main
+    <div
       ref={ref}
       className={cn(
-        "relative flex min-h-svh flex-1 flex-col bg-background transition-[margin-left] duration-200 ease-linear",
-        "group-data-[state=expanded]:md:ml-[var(--sidebar-width)]",
-        "group-data-[state=collapsed]:md:ml-[var(--sidebar-width-icon)]",
-        "group-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:group-data-[variant=inset]:m-2 md:group-data-[variant=inset]:ml-0 md:group-data-[variant=inset]:rounded-xl md:group-data-[variant=inset]:shadow",
-        "md:group-data-[state=collapsed]:group-data-[variant=inset]:ml-2",
+        "bg-background",
         className
       )}
       {...props}

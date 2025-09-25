@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { initialSubmissions, Submission } from '@/lib/submissions';
-import { ReviewQueue } from '@/components/review-queue';
-import { ReviewPageContent } from '@/components/review-page-content';
+import * as React from "react";
+import { initialSubmissions, Submission } from "@/lib/submissions";
+import { ReviewQueue } from "@/components/review-queue";
+import { ReviewPageContent } from "@/components/review-page-content";
 
 export default function ReviewPage() {
   const [reviews, setReviews] = React.useState<Submission[]>(
-    initialSubmissions.filter(s => s.status === 'Pending Review')
+    initialSubmissions.filter((s) => s.status === "Pending Review")
   );
 
   const [selectedReviewId, setSelectedReviewId] = React.useState<string | null>(
@@ -16,15 +16,15 @@ export default function ReviewPage() {
 
   const handleReviewAction = (
     submissionId: string,
-    action: 'Approved' | 'Rejected'
+    action: "Approved" | "Rejected"
   ) => {
-    const newReviews = reviews.filter(r => r.id !== submissionId);
+    const newReviews = reviews.filter((r) => r.id !== submissionId);
     setReviews(newReviews);
-    const nextReview = newReviews.find(r => r.id !== submissionId) || null;
+    const nextReview = newReviews.find((r) => r.id !== submissionId) || null;
     setSelectedReviewId(nextReview ? nextReview.id : null);
   };
 
-  const selectedReview = reviews.find(r => r.id === selectedReviewId);
+  const selectedReview = reviews.find((r) => r.id === selectedReviewId);
 
   return (
     <div className="grid h-full flex-1 gap-6 md:grid-cols-[350px_1fr]">
@@ -39,6 +39,7 @@ export default function ReviewPage() {
         onReviewAction={handleReviewAction}
         reviewCount={reviews.length}
       />
+      //Comment
     </div>
   );
 }

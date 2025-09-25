@@ -134,7 +134,7 @@ export default function RootLayoutClient({
 
   if (isLoginPage || isFieldPage) {
     return (
-      <div>
+      <div className="h-full">
         {children}
         <Toaster />
       </div>

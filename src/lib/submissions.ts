@@ -1,5 +1,3 @@
-
-
 import { Requirement } from "./tasks";
 
 export type SubmissionResult = {

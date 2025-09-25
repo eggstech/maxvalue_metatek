@@ -1,4 +1,3 @@
-
 export type Department = 'ADMIN' | 'PLANNING' | 'SPA/MKT' | 'IMPROVEMENT' | 'HQ/Control';
 
 export type User = {

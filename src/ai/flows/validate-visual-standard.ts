@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview A flow for validating a user's image submission against a PDF visual standard.
@@ -76,4 +75,3 @@ const validateVisualStandardFlow = ai.defineFlow(
     return mockFailApiResponse;
   }
 );
-

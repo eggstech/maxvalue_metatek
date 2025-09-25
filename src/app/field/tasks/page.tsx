@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Badge } from "@/components/ui/badge";
@@ -246,4 +245,3 @@ export default function FieldTaskPage() {
         </div>
     );
 }
-

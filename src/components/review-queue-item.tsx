@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Submission } from '@/lib/submissions';

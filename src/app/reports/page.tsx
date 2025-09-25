@@ -127,12 +127,12 @@ export default function ReportsPage() {
             </Button>
         </CardHeader>
         <CardContent>
-          <div className="relative max-h-[70vh] overflow-x-auto border rounded-lg">
+          <div className="relative max-h-[70vh] overflow-auto border rounded-lg">
             <Table className="min-w-full">
-              <TableHeader className="bg-muted/50 sticky top-0 z-20">
+              <TableHeader className="bg-muted/50 sticky top-0 z-10">
                 <TableRow>
-                  <TableHead scope="col" rowSpan={2} className="sticky left-0 bg-card z-30 w-[120px] text-left">Store Code</TableHead>
-                  <TableHead scope="col" rowSpan={2} className="sticky left-[120px] bg-card z-30 w-[180px] text-left">Store Name</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-0 bg-card z-20 w-[120px] text-left">Store Code</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-[120px] bg-card z-20 w-[180px] text-left">Store Name</TableHead>
                   <TableHead scope="colgroup" colSpan={3} className="text-center border-l border-r">Job Overview</TableHead>
                   {DEPARTMENTS.map(dep => (
                     <TableHead key={dep} scope="colgroup" colSpan={3} className="text-center border-l border-r">{dep}</TableHead>

@@ -1,15 +1,17 @@
 
 
 import { format } from "date-fns";
+import { users, User } from "./users";
 
 export type Requirement = {
-    type: 'image' | 'data-entry' | 'checklist';
+    type: 'image' | 'data-entry' | 'checklist' | 'pdf-standard';
     label: string;
     min?: number;
     max?: number;
     checklistItems?: { text: string }[];
     entryType?: 'text' | 'single' | 'multiple';
     options?: { text: string }[];
+    pdfUrl?: string;
 }
 
 export type Task = {
@@ -18,7 +20,8 @@ export type Task = {
   store: string;
   dueDate: string;
   status: 'Active' | 'Completed' | 'Draft' | 'Pending Review' | 'Overdue' | 'Rejected';
-  type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed';
+  type: 'Checklist' | 'Data Entry' | 'Image' | 'Mixed' | 'Visual Standard';
+  assignerId: string;
   description?: string;
   requirements?: Requirement[];
   isRecurring?: boolean;
@@ -30,8 +33,9 @@ export const initialTasks: Task[] = [
     name: 'Weekly Display Check',
     store: 'All Stores',
     dueDate: '2024-07-25',
-    status: 'Active',
+    status: 'Completed',
     type: 'Checklist',
+    assignerId: 'USR-003', // Isabella Nguyen - SPA/MKT
     description: 'Ensure all weekly promotional displays are set up correctly and are neat and tidy.\n\n- The main promotional banner should be visible from the store entrance.\n- Promotional materials should not be damaged.\n- All prices must be correct and clearly visible.',
     requirements: [
         {
@@ -59,6 +63,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-31',
     status: 'Pending Review',
     type: 'Data Entry',
+    assignerId: 'USR-002', // Jackson Lee - PLANNING
     description: 'Perform a full stock count of all items in the warehouse and on the shelves. Submit the final counts via the data entry form.',
     requirements: [
         {
@@ -76,10 +81,11 @@ export const initialTasks: Task[] = [
   {
     id: 'TSK-003',
     name: 'New Campaign POSM Setup',
-    store: 'Stores Group A',
+    store: 'Store A',
     dueDate: '2024-07-20',
     status: 'Pending Review',
     type: 'Image',
+    assignerId: 'USR-003', // Isabella Nguyen - SPA/MKT
     description: 'Set up the Point of Sale Materials for the new "Summer Sale" campaign. Submit a photo of the final setup for review.',
     requirements: [
         {
@@ -102,10 +108,11 @@ export const initialTasks: Task[] = [
   {
     id: 'TSK-004',
     name: 'Customer Feedback Survey',
-    store: 'Store C, Store D',
+    store: 'Store C',
     dueDate: '2024-08-05',
     status: 'Draft',
     type: 'Data Entry',
+    assignerId: 'USR-004', // William Kim - IMPROVEMENT
     description: 'Collect customer feedback using the provided survey form. Aim for at least 20 responses per store.',
   },
   {
@@ -115,6 +122,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-09-30',
     status: 'Active',
     type: 'Checklist',
+    assignerId: 'USR-001', // Olivia Martin - ADMIN
     description: 'Conduct a thorough deep clean of the entire store, including staff areas. Use the checklist to ensure all areas are covered.',
     requirements: [
         {
@@ -137,6 +145,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-08-15',
     status: 'Completed',
     type: 'Mixed',
+    assignerId: 'USR-002', // Jackson Lee - PLANNING
     description: 'Verify the stock count from the latest delivery and check for discrepancies.',
     requirements: [
         {
@@ -163,6 +172,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-01',
     status: 'Overdue',
     type: 'Image',
+    assignerId: 'USR-001', // Olivia Martin - ADMIN
     description: 'Submit a photo of the main customer area to verify cleanliness standards are being met.',
     requirements: [
         {
@@ -189,6 +199,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-22',
     status: 'Rejected',
     type: 'Data Entry',
+    assignerId: 'USR-005', // Sofia Davis - HQ/Control
     description: 'Verify prices for 5 specific SKUs.',
     requirements: [
         {
@@ -205,6 +216,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-07-21',
     status: 'Completed',
     type: 'Image',
+    assignerId: 'USR-003', // Isabella Nguyen - SPA/MKT
     description: 'Setup the new monthly sales promotion display near the entrance.',
     requirements: [
       {
@@ -219,10 +231,11 @@ export const initialTasks: Task[] = [
   {
     id: 'TSK-010',
     name: 'Safety Compliance Check',
-    store: 'Store E',
+    store: 'Store A',
     dueDate: '2024-07-23',
     status: 'Completed',
     type: 'Checklist',
+    assignerId: 'USR-001', // Olivia Martin - ADMIN
     description: 'Perform weekly safety check.',
     requirements: [
       {
@@ -242,6 +255,7 @@ export const initialTasks: Task[] = [
     dueDate: '2024-08-10',
     status: 'Pending Review',
     type: 'Data Entry',
+    assignerId: 'USR-004', // William Kim - IMPROVEMENT
     description: 'Gather customer feedback using the survey questions below.',
     requirements: [
         {
@@ -272,6 +286,52 @@ export const initialTasks: Task[] = [
             entryType: 'text'
         }
     ]
+  },
+  {
+    id: 'TSK-012',
+    name: 'Bookshelf Standard Check',
+    store: 'Store A',
+    dueDate: '2024-08-15',
+    status: 'Active',
+    type: 'Visual Standard',
+    assignerId: 'USR-005', // Sofia Davis - HQ/Control
+    description: 'Please set up the bookshelf according to the visual standard provided in the PDF and submit a photo.',
+    requirements: [
+        {
+            type: 'pdf-standard',
+            label: 'Bookshelf Display Standard',
+            pdfUrl: '/standards/bookshelf-standard.pdf'
+        },
+        {
+            type: 'image',
+            label: 'Photo of your completed bookshelf display',
+            min: 1,
+            max: 1
+        }
+    ]
+  },
+  {
+    id: 'TSK-013',
+    name: 'Simple Bookshelf Check',
+    store: 'Store B',
+    dueDate: '2024-08-18',
+    status: 'Active',
+    type: 'Visual Standard',
+    assignerId: 'USR-005', // Sofia Davis - HQ/Control
+    description: 'A simple check that should pass validation.',
+    requirements: [
+      {
+        type: 'pdf-standard',
+        label: 'Simple Display Standard',
+        pdfUrl: '/standards/ok-standard.pdf',
+      },
+      {
+        type: 'image',
+        label: 'Photo of your completed bookshelf display',
+        min: 1,
+        max: 1,
+      },
+    ],
   }
 ];
 
@@ -288,7 +348,9 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
     // Determine the primary type
     const reqTypes = new Set(newTaskData.requirements?.map((r: Requirement) => r.type) || []);
     let primaryType: Task['type'] = 'Data Entry'; // Default
-    if (reqTypes.size > 1) {
+    if (reqTypes.has('pdf-standard')) {
+        primaryType = 'Visual Standard';
+    } else if (reqTypes.size > 1) {
         primaryType = 'Mixed';
     } else if (reqTypes.has('image')) {
         primaryType = 'Image';
@@ -304,6 +366,7 @@ export const addTask = (newTaskData: any, existingTasks: Task[]): Task => {
         dueDate: format(fullDueDate, 'yyyy-MM-dd'),
         status: 'Draft',
         type: primaryType,
+        assignerId: 'USR-001', // Hardcode Admin user as assigner
         description: newTaskData.description,
         requirements: newTaskData.requirements,
         isRecurring: newTaskData.isRecurring,

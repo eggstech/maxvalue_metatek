@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Badge } from '@/components/ui/badge';
@@ -9,19 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -30,98 +18,108 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { initialTasks, Task } from '@/lib/tasks';
+import { users, Department } from '@/lib/users';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon, FileDown } from 'lucide-react';
+import { FileDown } from 'lucide-react';
 import * as React from 'react';
-import Link from 'next/link';
 
-const reportData = [
-    { id: 'SUB-005', taskId: 'TSK-009', task: 'Monthly Sales Display', store: 'Store B', completedBy: 'User 3', date: '2024-07-21', status: 'Approved' },
-    { id: 'SUB-001', taskId: 'TSK-003', task: 'New Campaign POSM Setup', store: 'Store A', completedBy: 'User 2', date: '2024-07-19', status: 'Pending Review' },
-    { id: 'SUB-008', taskId: 'TSK-008', task: 'Price Check', store: 'Store B', completedBy: 'User 3', date: '2024-07-22', status: 'Rejected' },
-    { id: 'SUB-002', taskId: 'TSK-001', task: 'Weekly Display Check', store: 'Store C', completedBy: 'User 4', date: '2024-07-20', status: 'Pending Review' },
-    { id: 'SUB-003', taskId: 'TSK-006', task: 'Stock Count Verification', store: 'Store A', completedBy: 'User 2', date: '2024-07-21', status: 'Approved' },
-    { id: 'SUB-007', taskId: 'TSK-010', task: 'Safety Compliance Check', store: 'Store E', completedBy: 'User 9', date: '2024-07-23', status: 'Approved' },
-];
+const DEPARTMENTS: Department[] = ['ADMIN', 'PLANNING', 'SPA/MKT', 'IMPROVEMENT', 'HQ/Control'];
 
-const StatusBadge = ({ status }: { status: string }) => {
-    switch (status) {
-      case 'Approved':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100/80 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-700">Approved</Badge>;
-      case 'Rejected':
-        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100/80 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-700">Rejected</Badge>;
-      case 'Pending Review':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80 dark:bg-yellow-900/50 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700">Pending Review</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
+// Define thresholds for color coding
+const COMPLETION_THRESHOLD_GOOD = 90;
+const COMPLETION_THRESHOLD_WARN = 40;
+
+
+interface DepartmentStats {
+  total: number;
+  completed: number;
+}
+
+interface StoreReport {
+  storeCode: string;
+  storeName: string;
+  overview: DepartmentStats;
+  departments: Record<Department, DepartmentStats>;
+}
+
+const calculatePercentage = (completed: number, total: number) => {
+  if (total === 0) return 0;
+  return Math.round((completed / total) * 100);
+};
+
+// Create a map for quick user lookup
+const userMap = new Map(users.map(user => [user.id, user]));
 
 export default function ReportsPage() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  const reportData = React.useMemo(() => {
+    const stores = Array.from(new Set(initialTasks.map(t => t.store).filter(s => s !== 'All Stores')));
+    
+    const data: StoreReport[] = stores.map((storeName, index) => {
+      
+      const report: StoreReport = {
+        storeCode: `ST-${String(index + 1).padStart(3, '0')}`,
+        storeName,
+        overview: { total: 0, completed: 0 },
+        departments: {
+          'ADMIN': { total: 0, completed: 0 },
+          'PLANNING': { total: 0, completed: 0 },
+          'SPA/MKT': { total: 0, completed: 0 },
+          'IMPROVEMENT': { total: 0, completed: 0 },
+          'HQ/Control': { total: 0, completed: 0 },
+        },
+      };
+
+      // Get tasks assigned specifically to this store or to "All Stores"
+      const applicableTasks = initialTasks.filter(task => task.store === storeName || task.store === 'All Stores');
+
+      applicableTasks.forEach(task => {
+        const assigner = userMap.get(task.assignerId);
+        if (!assigner) return; // Skip if assigner not found
+
+        const department = assigner.department;
+        const isCompleted = task.status === 'Completed' || task.status === 'Approved';
+        
+        // Update overview
+        report.overview.total++;
+        if (isCompleted) report.overview.completed++;
+
+        // Update department stats
+        if (report.departments[department]) {
+          report.departments[department].total++;
+          if (isCompleted) {
+            report.departments[department].completed++;
+          }
+        }
+      });
+
+      return report;
+    });
+
+    return data;
+
+  }, []);
+
+  const getPercentageCellClass = (percent: number) => {
+    if (percent < COMPLETION_THRESHOLD_WARN) {
+      return "text-red-500";
+    }
+    if (percent < COMPLETION_THRESHOLD_GOOD) {
+      return "text-yellow-500";
+    }
+    return "";
+  };
 
   return (
     <div className="flex flex-col gap-6">
       <Card>
-        <CardHeader>
-          <CardTitle>Reports</CardTitle>
-          <CardDescription>
-            Generate and export detailed reports on performance and compliance.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col sm:flex-row gap-4">
-          <Select>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Select a task" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Tasks</SelectItem>
-              <SelectItem value="display-check">Display Check</SelectItem>
-              <SelectItem value="stock-count">Stock Count</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Select a store" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Stores</SelectItem>
-              <SelectItem value="store-a">Store A</SelectItem>
-              <SelectItem value="store-b">Store B</SelectItem>
-            </SelectContent>
-          </Select>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={'outline'}
-                className={cn(
-                  'w-full sm:w-[240px] justify-start text-left font-normal',
-                  !date && 'text-muted-foreground'
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          <Button className="w-full sm:w-auto ml-auto">Generate Report</Button>
-        </CardContent>
-      </Card>
-
-      <Card>
         <CardHeader className='flex-row items-center justify-between'>
             <div>
-                <CardTitle>Task Compliance Report</CardTitle>
-                <CardDescription>July 2024</CardDescription>
+                <CardTitle>Store Performance Report</CardTitle>
+                <CardDescription>
+                    An overview of task completion rates across all stores and departments.
+                </CardDescription>
             </div>
             <Button variant="outline">
                 <FileDown className="mr-2 h-4 w-4" />
@@ -129,34 +127,73 @@ export default function ReportsPage() {
             </Button>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Task</TableHead>
-                <TableHead>Store</TableHead>
-                <TableHead>Completed By</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {reportData.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
-                    <Link href={`/tasks/${row.taskId}`} className="text-primary hover:underline">
-                      {row.task}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{row.store}</TableCell>
-                  <TableCell>{row.completedBy}</TableCell>
-                  <TableCell>{row.date}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={row.status} />
-                  </TableCell>
+          <div className="relative max-h-[70vh] overflow-x-auto border rounded-lg">
+            <Table className="min-w-full">
+              <TableHeader className="bg-muted/50 sticky top-0 z-20">
+                <TableRow>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-0 bg-card z-30 w-[120px] text-left">Store Code</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-[120px] bg-card z-30 w-[180px] text-left">Store Name</TableHead>
+                  <TableHead scope="colgroup" colSpan={3} className="text-center border-l border-r">Job Overview</TableHead>
+                  {DEPARTMENTS.map(dep => (
+                    <TableHead key={dep} scope="colgroup" colSpan={3} className="text-center border-l border-r">{dep}</TableHead>
+                  ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                <TableRow>
+                  {/* Overview Columns */}
+                  <TableHead scope="col" className="text-right border-l">Total Task</TableHead>
+                  <TableHead scope="col" className="text-right">Completed</TableHead>
+                  <TableHead scope="col" className="text-right border-r">Complete %</TableHead>
+                  {/* Department Columns */}
+                  {DEPARTMENTS.map(dep => (
+                    <React.Fragment key={`${dep}-header`}>
+                      <TableHead scope="col" className="text-right border-l">Total Task</TableHead>
+                      <TableHead scope="col" className="text-right">Completed</TableHead>
+                      <TableHead scope="col" className="text-right border-r">Complete %</TableHead>
+                    </React.Fragment>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {reportData.map((row) => {
+                    const overviewPercent = calculatePercentage(row.overview.completed, row.overview.total);
+                    
+                    return (
+                        <TableRow key={row.storeCode} className="hover:bg-muted/30">
+                            <TableCell className="font-medium sticky left-0 bg-card z-10">{row.storeCode}</TableCell>
+                            <TableCell className="sticky left-[120px] bg-card z-10">{row.storeName}</TableCell>
+                            {/* Overview Data */}
+                            <TableCell className="text-right border-l">{row.overview.total}</TableCell>
+                            <TableCell className="text-right">{row.overview.completed}</TableCell>
+                            <TableCell className={cn(
+                                "text-right font-bold border-r",
+                                getPercentageCellClass(overviewPercent)
+                            )}>
+                                {overviewPercent}
+                            </TableCell>
+
+                            {/* Department Data */}
+                            {DEPARTMENTS.map(dep => {
+                                const deptStats = row.departments[dep];
+                                const deptPercent = calculatePercentage(deptStats.completed, deptStats.total);
+                                return (
+                                    <React.Fragment key={`${row.storeCode}-${dep}`}>
+                                        <TableCell className="text-right border-l">{deptStats.total}</TableCell>
+                                        <TableCell className="text-right">{deptStats.completed}</TableCell>
+                                        <TableCell className={cn(
+                                            "text-right font-bold border-r",
+                                            deptStats.total > 0 ? getPercentageCellClass(deptPercent) : "text-muted-foreground"
+                                        )}>
+                                            {deptStats.total > 0 ? deptPercent : '-'}
+                                        </TableCell>
+                                    </React.Fragment>
+                                )
+                            })}
+                        </TableRow>
+                    )
+                })}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

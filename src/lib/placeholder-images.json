@@ -3,49 +3,85 @@
     {
       "id": "user-avatar-1",
       "description": "User avatar for the main user navigation.",
-      "imageUrl": "https://picsum.photos/seed/1/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwcm9mZXNzaW9uYWwlMjBwZXJzb258ZW58MHx8fHwxNzU4NjkxMzQxfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "professional person"
     },
     {
       "id": "user-avatar-2",
       "description": "User avatar for a team member.",
-      "imageUrl": "https://picsum.photos/seed/2/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1692736475357-7c18bfbb808b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzU4NjU1Mzc5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman smiling"
     },
     {
       "id": "user-avatar-3",
       "description": "User avatar for another team member.",
-      "imageUrl": "https://picsum.photos/seed/3/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1627554785796-f9646d15c2da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYW4lMjBnbGFzc2VzfGVufDB8fHx8MTc1ODY5ODE4NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "man glasses"
     },
     {
       "id": "user-avatar-4",
       "description": "User avatar for a manager.",
-      "imageUrl": "https://picsum.photos/seed/4/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b21hbiUyMHByb2Zlc3Npb25hbHxlbnwwfHx8fDE3NTg3MDQ0NDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman professional"
+    },
+    {
+      "id": "user-avatar-5",
+      "description": "User avatar for another team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBpbiUyMHN1aXR8ZW58MHx8fHwxNzU4NzEwNTkyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man in suit"
+    },
+    {
+      "id": "user-avatar-6",
+      "description": "User avatar for another team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1503945438517-f65904a52ce6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMHdpdGglMjBsYXB0b3B8ZW58MHx8fHwxNzU4NzE5Mzc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman with laptop"
+    },
+    {
+      "id": "user-avatar-7",
+      "description": "User avatar for another team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1638389747564-c7cc1c9f7a49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjB3aXRoJTIwaGVhZHNldHxlbnwwfHx8fDE3NTg3MTkzNzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man with headset"
+    },
+    {
+      "id": "user-avatar-8",
+      "description": "User avatar for another team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1625297673112-06b459140555?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwZXJzb24lMjBhdCUyMGRlc2t8ZW58MHx8fHwxNzU4NzE5Mzc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person at desk"
+    },
+    {
+      "id": "user-avatar-9",
+      "description": "User avatar for another team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1590627339432-16bcfcec24c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b21hbiUyMG91dHNpZGV8ZW58MHx8fHwxNzU4NzE5Mzc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman outside"
+    },
+    {
+      "id": "user-avatar-10",
+      "description": "User avatar for another team member.",
+      "imageUrl": "https://images.unsplash.com/photo-1710505736802-cf590163da3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYW4lMjBpbiUyMGNhZmV8ZW58MHx8fHwxNzU4NzE5Mzc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man in cafe"
     },
     {
       "id": "review-image-1",
       "description": "Image submission for review.",
-      "imageUrl": "https://picsum.photos/seed/101/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1581862076211-1cfa18cc2bf1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmV0YWlsJTIwZGlzcGxheXxlbnwwfHx8fDE3NTg2ODExODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "retail display"
     },
     {
       "id": "review-image-2",
       "description": "Image submission for review.",
-      "imageUrl": "https://picsum.photos/seed/102/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1604719312266-d57b1438d4bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzdG9yZSUyMGFpc2xlfGVufDB8fHx8MTc1ODYyMjUzMXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "store aisle"
     },
     {
       "id": "review-image-3",
       "description": "Image submission for review.",
-      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1609143739217-01b60dad1c67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3YXJlaG91c2UlMjBib3hlc3xlbnwwfHx8fDE3NTg3MTkzNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "warehouse boxes"
     },
     {
       "id": "review-image-4",
       "description": "Image submission for review.",
-      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1739172586862-80edb0432fba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2xlYW4lMjBmbG9vcnxlbnwwfHx8fDE3NTg3MTkzNzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "clean floor"
     }
   ]

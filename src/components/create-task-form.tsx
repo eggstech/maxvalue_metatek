@@ -26,7 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { CalendarIcon, PlusCircle, Trash2, Image as ImageIcon, TextCursorInput, ListChecks } from 'lucide-react';
+import { CalendarIcon, PlusCircle, Trash2, Image as ImageIcon, TextCursorInput, ListChecks, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -38,13 +38,14 @@ import { Switch } from './ui/switch';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 
 const requirementSchema = z.object({
-  type: z.enum(['image', 'data-entry', 'checklist']),
+  type: z.enum(['image', 'data-entry', 'checklist', 'pdf-standard']),
   label: z.string().min(1, 'Label is required.'),
   min: z.number().optional(),
   max: z.number().optional(),
   checklistItems: z.array(z.object({ text: z.string().min(1, 'Checklist item cannot be empty.') })).optional(),
   entryType: z.enum(['text', 'single', 'multiple']).optional(),
   options: z.array(z.object({ text: z.string().min(1, 'Option cannot be empty.') })).optional(),
+  pdfUrl: z.string().optional(),
 });
 
 const formSchema = z.object({
@@ -357,6 +358,7 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                                         <SelectItem value="image">Image Submission</SelectItem>
                                         <SelectItem value="data-entry">Data Entry</SelectItem>
                                         <SelectItem value="checklist">Checklist</SelectItem>
+                                        <SelectItem value="pdf-standard">PDF Visual Standard</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -371,6 +373,13 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                                 <FormField control={form.control} name={`requirements.${index}.min`} render={({field}) => (<FormItem><FormLabel>Min Images</FormLabel><FormControl><Input type="number" placeholder="1" {...field} value={field.value ?? ''} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/></FormControl><FormMessage /></FormItem>)} />
                                 <FormField control={form.control} name={`requirements.${index}.max`} render={({field}) => (<FormItem><FormLabel>Max Images</FormLabel><FormControl><Input type="number" placeholder="5" {...field} value={field.value ?? ''} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/></FormControl><FormMessage /></FormItem>)} />
                             </div>
+                        </>
+                    )}
+
+                    {form.watch(`requirements.${index}.type`) === 'pdf-standard' && (
+                        <>
+                            <FormField control={form.control} name={`requirements.${index}.label`} render={({field}) => (<FormItem><FormLabel>Standard Name</FormLabel><FormControl><Input placeholder="e.g. 'Bookshelf Display Standard'" {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={form.control} name={`requirements.${index}.pdfUrl`} render={({field}) => (<FormItem><FormLabel>Standard PDF</FormLabel><FormControl><Input type="file" accept=".pdf" {...field} value={field.value ?? ''} /></FormControl><FormDescription>Upload the PDF containing the visual instructions.</FormDescription><FormMessage /></FormItem>)} />
                         </>
                     )}
 
@@ -477,6 +486,9 @@ export function CreateTaskForm({ onTaskCreate, onAfterSubmit }: CreateTaskFormPr
                          </Button>
                          <Button variant="ghost" className="justify-start p-3 h-auto" onClick={() => append({type: 'checklist', label: '', checklistItems: [{text: ''}]})}>
                             <ListChecks className="mr-2 h-4 w-4" /> Checklist
+                         </Button>
+                         <Button variant="ghost" className="justify-start p-3 h-auto" onClick={() => append({type: 'pdf-standard', label: '', pdfUrl: ''})}>
+                            <FileText className="mr-2 h-4 w-4" /> PDF Visual Standard
                          </Button>
                     </div>
                 </PopoverContent>

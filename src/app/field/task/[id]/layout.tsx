@@ -9,7 +9,7 @@ export default function FieldTaskDetailLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full">
+        <div className="flex flex-col gap-6 w-full">
              <div className="flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
                     <Link href="/field/tasks">

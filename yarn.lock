@@ -980,6 +980,27 @@
     zod "^3.23.8"
     zod-to-json-schema "^3.24.1"
 
+"@napi-rs/canvas-linux-x64-gnu@0.1.80":
+  version "0.1.80"
+  resolved "https://registry.npmjs.org/@napi-rs/canvas-linux-x64-gnu/-/canvas-linux-x64-gnu-0.1.80.tgz"
+  integrity sha512-BeXAmhKg1kX3UCrJsYbdQd3hIMDH/K6HnP/pG2LuITaXhXBiNdh//TVVVVCBbJzVQaV5gK/4ZOCMrQW9mvuTqA==
+
+"@napi-rs/canvas@^0.1.65":
+  version "0.1.80"
+  resolved "https://registry.npmjs.org/@napi-rs/canvas/-/canvas-0.1.80.tgz"
+  integrity sha512-DxuT1ClnIPts1kQx8FBmkk4BQDTfI5kIzywAaMjQSXfNnra5UFU9PwurXrl+Je3bJ6BGsp/zmshVVFbCmyI+ww==
+  optionalDependencies:
+    "@napi-rs/canvas-android-arm64" "0.1.80"
+    "@napi-rs/canvas-darwin-arm64" "0.1.80"
+    "@napi-rs/canvas-darwin-x64" "0.1.80"
+    "@napi-rs/canvas-linux-arm-gnueabihf" "0.1.80"
+    "@napi-rs/canvas-linux-arm64-gnu" "0.1.80"
+    "@napi-rs/canvas-linux-arm64-musl" "0.1.80"
+    "@napi-rs/canvas-linux-riscv64-gnu" "0.1.80"
+    "@napi-rs/canvas-linux-x64-gnu" "0.1.80"
+    "@napi-rs/canvas-linux-x64-musl" "0.1.80"
+    "@napi-rs/canvas-win32-x64-msvc" "0.1.80"
+
 "@next/env@15.3.3":
   version "15.3.3"
   resolved "https://registry.npmjs.org/@next/env/-/env-15.3.3.tgz"
@@ -5817,6 +5838,13 @@ pause-stream@0.0.11:
   integrity sha512-e3FBlXLmN/D1S+zHzanP4E/4Z60oFAa3O051qt1pxa7DEJWKAyil6upYVXCWadEnuoqa4Pkc9oUx9zsxYeRv8A==
   dependencies:
     through "~2.3"
+
+pdfjs-dist@^4.5.136:
+  version "4.10.38"
+  resolved "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-4.10.38.tgz"
+  integrity sha512-/Y3fcFrXEAsMjJXeL9J8+ZG9U01LbuWaYypvDW2ycW1jL269L3js3DVBjDJ0Up9Np1uqDXsDrRihHANhZOlwdQ==
+  optionalDependencies:
+    "@napi-rs/canvas" "^0.1.65"
 
 pend@~1.2.0:
   version "1.2.0"

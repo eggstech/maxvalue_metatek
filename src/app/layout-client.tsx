@@ -17,9 +17,9 @@ import { UserNav } from '@/components/user-nav';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { NotificationNav } from '@/components/notification-nav';
-import { cn } from '@/lib/utils';
 import { useMounted } from '@/hooks/use-mounted';
-import { Skeleton } from '@/components/ui/skeleton';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const { state } = useSidebar();
@@ -29,13 +29,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <div
       style={
         {
-          "--sidebar-width": "16rem",
-          "--sidebar-width-icon": "3rem",
+          '--sidebar-width': '16rem',
+          '--sidebar-width-icon': '3rem',
         } as React.CSSProperties
       }
-      className={cn(
-        "group/sidebar-wrapper flex min-h-svh w-full"
-      )}
+      className={cn('group/sidebar-wrapper flex min-h-svh w-full')}
     >
       <div data-state={state} className="group flex w-full flex-1">
         {mounted ? (
@@ -45,7 +43,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 95 40"
-                  className="w-8 h-8 text-primary"
+                  className="h-8 w-8 text-primary"
                   fill="currentColor"
                 >
                   <defs>
@@ -58,7 +56,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                     >
                       <stop
                         offset="0%"
-                        style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 1 }}
+                        style={{
+                          stopColor: 'hsl(var(--primary))',
+                          stopOpacity: 1,
+                        }}
                       />
                       <stop
                         offset="100%"
@@ -93,11 +94,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           </Sidebar>
         ) : (
           <div className="hidden md:block">
-             <div className="relative h-svh w-[var(--sidebar-width)]" />
+            <div className="relative h-svh w-[var(--sidebar-width)]" />
           </div>
         )}
         <SidebarInset>
-          <header className="flex h-14 items-center gap-4 border-b bg-background/95 backdrop-blur-sm px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
+          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm lg:h-[60px] lg:px-6">
             <SidebarTrigger className="md:hidden" />
             <div className="w-full flex-1">
               <form>
@@ -123,13 +124,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-
 export default function RootLayoutClient({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
   const isLoginPage = pathname === '/';
   const isFieldPage = pathname.startsWith('/field');
 
@@ -144,9 +145,7 @@ export default function RootLayoutClient({
 
   return (
     <SidebarProvider>
-      <AppLayout>
-        {children}
-      </AppLayout>
+      <AppLayout>{children}</AppLayout>
       <Toaster />
     </SidebarProvider>
   );

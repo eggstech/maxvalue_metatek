@@ -108,7 +108,7 @@ export default function ReportsPage() {
     if (percent < COMPLETION_THRESHOLD_GOOD) {
       return "text-yellow-500";
     }
-    return "text-green-600";
+    return "";
   };
 
   return (
@@ -131,24 +131,24 @@ export default function ReportsPage() {
             <Table className="min-w-full">
               <TableHeader className="bg-muted/50 sticky top-0 z-20">
                 <TableRow>
-                  <TableHead rowSpan={2} className="sticky left-0 bg-muted/50 z-30 w-[120px] text-left">Store Code</TableHead>
-                  <TableHead rowSpan={2} className="sticky left-[120px] bg-muted/50 z-30 w-[180px] text-left">Store Name</TableHead>
-                  <TableHead colSpan={3} className="text-center border-l border-r">Job Overview</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-0 bg-card z-30 w-[120px] text-left">Store Code</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-[120px] bg-card z-30 w-[180px] text-left">Store Name</TableHead>
+                  <TableHead scope="colgroup" colSpan={3} className="text-center border-l border-r">Job Overview</TableHead>
                   {DEPARTMENTS.map(dep => (
-                    <TableHead key={dep} colSpan={3} className="text-center border-l border-r">{dep}</TableHead>
+                    <TableHead key={dep} scope="colgroup" colSpan={3} className="text-center border-l border-r">{dep}</TableHead>
                   ))}
                 </TableRow>
                 <TableRow>
                   {/* Overview Columns */}
-                  <TableHead className="text-right border-l">Total Task</TableHead>
-                  <TableHead className="text-right">Completed</TableHead>
-                  <TableHead className="text-right border-r">Complete %</TableHead>
+                  <TableHead scope="col" className="text-right border-l">Total Task</TableHead>
+                  <TableHead scope="col" className="text-right">Completed</TableHead>
+                  <TableHead scope="col" className="text-right border-r">Complete %</TableHead>
                   {/* Department Columns */}
                   {DEPARTMENTS.map(dep => (
                     <React.Fragment key={`${dep}-header`}>
-                      <TableHead className="text-right border-l">Total Task</TableHead>
-                      <TableHead className="text-right">Completed</TableHead>
-                      <TableHead className="text-right border-r">Complete %</TableHead>
+                      <TableHead scope="col" className="text-right border-l">Total Task</TableHead>
+                      <TableHead scope="col" className="text-right">Completed</TableHead>
+                      <TableHead scope="col" className="text-right border-r">Complete %</TableHead>
                     </React.Fragment>
                   ))}
                 </TableRow>

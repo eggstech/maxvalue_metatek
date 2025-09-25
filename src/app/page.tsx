@@ -11,9 +11,10 @@ import {
 } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
 import { Building, UserCheck } from 'lucide-react';
+import * as React from 'react';
 
 
-export default function LoginPage() {
+function LoginPageContent() {
     const router = useRouter();
 
     const handleAdminLogin = () => {
@@ -67,4 +68,12 @@ export default function LoginPage() {
             </Card>
         </div>
     );
+}
+
+export default function LoginPage() {
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <LoginPageContent />
+        </React.Suspense>
+    )
 }

@@ -128,7 +128,7 @@ const SidebarProvider = React.forwardRef<
     )
 
     return (
-      <TooltipProvider delayDuration={0} {...props}>
+      <TooltipProvider delayDuration={0}>
          <SidebarContext.Provider value={contextValue} {...props} />
       </TooltipProvider>
     )
@@ -151,7 +151,7 @@ const Sidebar = React.forwardRef<
     },
     ref
   ) => {
-    const { isMobile, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, openMobile, setOpenMobile, state } = useSidebar()
     
     if (isMobile) {
       return (
@@ -177,6 +177,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         data-sidebar="sidebar"
+        data-state={state}
         className={cn(
           "hidden md:flex flex-col h-svh w-full bg-sidebar text-sidebar-foreground border-r",
           className

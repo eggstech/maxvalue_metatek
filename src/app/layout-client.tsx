@@ -7,10 +7,8 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-  useSidebar,
 } from '@/components/ui/sidebar';
 import { MainNav } from '@/components/main-nav';
 import { UserNav } from '@/components/user-nav';
@@ -23,12 +21,10 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
-  const { state } = useSidebar();
   const mounted = useMounted();
 
   return (
     <div
-      data-state={state}
       style={
         {
           '--sidebar-width': '16rem',

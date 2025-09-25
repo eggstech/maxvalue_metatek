@@ -1,3 +1,4 @@
+
 import { getSubmissionById } from '@/lib/submissions';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';

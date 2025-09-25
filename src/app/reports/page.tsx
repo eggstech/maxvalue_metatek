@@ -25,7 +25,11 @@ import { FileDown } from 'lucide-react';
 import * as React from 'react';
 
 const DEPARTMENTS: Department[] = ['ADMIN', 'PLANNING', 'SPA/MKT', 'IMPROVEMENT', 'HQ/Control'];
-const COMPLETION_THRESHOLD = 90; // 90%
+
+// Define thresholds for color coding
+const COMPLETION_THRESHOLD_GOOD = 90;
+const COMPLETION_THRESHOLD_WARN = 40;
+
 
 interface DepartmentStats {
   total: number;
@@ -97,6 +101,16 @@ export default function ReportsPage() {
 
   }, []);
 
+  const getPercentageCellClass = (percent: number) => {
+    if (percent < COMPLETION_THRESHOLD_WARN) {
+      return "text-red-500";
+    }
+    if (percent < COMPLETION_THRESHOLD_GOOD) {
+      return "text-yellow-500";
+    }
+    return "text-green-600";
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -113,12 +127,12 @@ export default function ReportsPage() {
             </Button>
         </CardHeader>
         <CardContent>
-          <div className="relative overflow-x-auto">
+          <div className="relative max-h-[70vh] overflow-x-auto border rounded-lg">
             <Table className="min-w-full">
-              <TableHeader>
+              <TableHeader className="bg-muted/50 sticky top-0 z-20">
                 <TableRow>
-                  <TableHead rowSpan={2} className="sticky left-0 bg-card z-10 w-[100px]">Store Code</TableHead>
-                  <TableHead rowSpan={2} className="sticky left-[100px] bg-card z-10 w-[150px]">Store Name</TableHead>
+                  <TableHead rowSpan={2} className="sticky left-0 bg-muted/50 z-30 w-[120px] text-left">Store Code</TableHead>
+                  <TableHead rowSpan={2} className="sticky left-[120px] bg-muted/50 z-30 w-[180px] text-left">Store Name</TableHead>
                   <TableHead colSpan={3} className="text-center border-l border-r">Job Overview</TableHead>
                   {DEPARTMENTS.map(dep => (
                     <TableHead key={dep} colSpan={3} className="text-center border-l border-r">{dep}</TableHead>
@@ -126,15 +140,15 @@ export default function ReportsPage() {
                 </TableRow>
                 <TableRow>
                   {/* Overview Columns */}
-                  <TableHead className="text-center border-l">Total Task</TableHead>
-                  <TableHead className="text-center">Completed</TableHead>
-                  <TableHead className="text-center border-r">Complete %</TableHead>
+                  <TableHead className="text-right border-l">Total Task</TableHead>
+                  <TableHead className="text-right">Completed</TableHead>
+                  <TableHead className="text-right border-r">Complete %</TableHead>
                   {/* Department Columns */}
                   {DEPARTMENTS.map(dep => (
                     <React.Fragment key={`${dep}-header`}>
-                      <TableHead className="text-center border-l">Total Task</TableHead>
-                      <TableHead className="text-center">Completed</TableHead>
-                      <TableHead className="text-center border-r">Complete %</TableHead>
+                      <TableHead className="text-right border-l">Total Task</TableHead>
+                      <TableHead className="text-right">Completed</TableHead>
+                      <TableHead className="text-right border-r">Complete %</TableHead>
                     </React.Fragment>
                   ))}
                 </TableRow>
@@ -144,17 +158,17 @@ export default function ReportsPage() {
                     const overviewPercent = calculatePercentage(row.overview.completed, row.overview.total);
                     
                     return (
-                        <TableRow key={row.storeCode}>
+                        <TableRow key={row.storeCode} className="hover:bg-muted/30">
                             <TableCell className="font-medium sticky left-0 bg-card z-10">{row.storeCode}</TableCell>
-                            <TableCell className="sticky left-[100px] bg-card z-10">{row.storeName}</TableCell>
+                            <TableCell className="sticky left-[120px] bg-card z-10">{row.storeName}</TableCell>
                             {/* Overview Data */}
-                            <TableCell className="text-center border-l">{row.overview.total}</TableCell>
-                            <TableCell className="text-center">{row.overview.completed}</TableCell>
+                            <TableCell className="text-right border-l">{row.overview.total}</TableCell>
+                            <TableCell className="text-right">{row.overview.completed}</TableCell>
                             <TableCell className={cn(
-                                "text-center font-bold border-r",
-                                overviewPercent < COMPLETION_THRESHOLD && "text-red-500"
+                                "text-right font-bold border-r",
+                                getPercentageCellClass(overviewPercent)
                             )}>
-                                {overviewPercent}%
+                                {overviewPercent}
                             </TableCell>
 
                             {/* Department Data */}
@@ -163,13 +177,13 @@ export default function ReportsPage() {
                                 const deptPercent = calculatePercentage(deptStats.completed, deptStats.total);
                                 return (
                                     <React.Fragment key={`${row.storeCode}-${dep}`}>
-                                        <TableCell className="text-center border-l">{deptStats.total}</TableCell>
-                                        <TableCell className="text-center">{deptStats.completed}</TableCell>
+                                        <TableCell className="text-right border-l">{deptStats.total}</TableCell>
+                                        <TableCell className="text-right">{deptStats.completed}</TableCell>
                                         <TableCell className={cn(
-                                            "text-center font-bold border-r",
-                                            deptStats.total > 0 && deptPercent < COMPLETION_THRESHOLD && "text-red-500"
+                                            "text-right font-bold border-r",
+                                            deptStats.total > 0 ? getPercentageCellClass(deptPercent) : "text-muted-foreground"
                                         )}>
-                                            {deptStats.total > 0 ? `${deptPercent}%` : '-'}
+                                            {deptStats.total > 0 ? deptPercent : '-'}
                                         </TableCell>
                                     </React.Fragment>
                                 )

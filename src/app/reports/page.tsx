@@ -127,12 +127,12 @@ export default function ReportsPage() {
             </Button>
         </CardHeader>
         <CardContent>
-          <div className="relative max-h-[70vh] overflow-x-auto border rounded-lg">
+          <div className="relative max-h-[70vh] overflow-auto border rounded-lg">
             <Table className="min-w-full">
-              <TableHeader className="bg-muted/50 sticky top-0 z-20">
+              <TableHeader className="sticky top-0 z-20 bg-muted">
                 <TableRow>
-                  <TableHead scope="col" rowSpan={2} className="sticky left-0 bg-card z-30 w-[120px] text-left">Store Code</TableHead>
-                  <TableHead scope="col" rowSpan={2} className="sticky left-[120px] bg-card z-30 w-[180px] text-left">Store Name</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-0 z-30 w-[120px] bg-muted text-left">Store Code</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-[119px] z-30 w-[180px] bg-muted text-left">Store Name</TableHead>
                   <TableHead scope="colgroup" colSpan={3} className="text-center border-l border-r">Job Overview</TableHead>
                   {DEPARTMENTS.map(dep => (
                     <TableHead key={dep} scope="colgroup" colSpan={3} className="text-center border-l border-r">{dep}</TableHead>
@@ -159,8 +159,8 @@ export default function ReportsPage() {
                     
                     return (
                         <TableRow key={row.storeCode} className="hover:bg-muted/30">
-                            <TableCell className="font-medium sticky left-0 bg-card z-10">{row.storeCode}</TableCell>
-                            <TableCell className="sticky left-[120px] bg-card z-10">{row.storeName}</TableCell>
+                            <TableCell className="font-medium sticky left-0 z-10 bg-card">{row.storeCode}</TableCell>
+                            <TableCell className="sticky left-[119px] z-10 bg-card">{row.storeName}</TableCell>
                             {/* Overview Data */}
                             <TableCell className="text-right border-l">{row.overview.total}</TableCell>
                             <TableCell className="text-right">{row.overview.completed}</TableCell>
